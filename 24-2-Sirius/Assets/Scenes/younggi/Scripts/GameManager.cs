@@ -5,19 +5,25 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-    public enum State
+    [SerializeField]
+    enum State
     {
         buy, magic, sell, result
     }
 
-    public State state;
+    [SerializeField] State state;
 
     [SerializeField] TextMeshProUGUI stateTextObject;
+    [SerializeField] TextMeshProUGUI wallet;
+    [SerializeField] TextMeshProUGUI roundTextObject;
 
 
-    int sellerCount;
-    int buyerCount;
-    public int itemCount = 0;
+    private int round = 0;
+    private int money = 10000;
+
+    private int sellerCount = 0;
+    private int buyerCount = 0;
+    private int itemCount = 0;
     private int preItemCount = 0;
 
     private void Awake()
@@ -25,45 +31,49 @@ public class GameManager : MonoBehaviour
         startBuyItem();
     }
 
-    void startBuyItem()
+    private void Update()
+    {
+        wallet.text = money.ToString();
+        roundTextObject.text = round.ToString();
+    }
+
+    private void startBuyItem()
     {
         state = State.buy;
+
+        round += 1;
         sellerCount = 5;
 
         stateTextObject.text = "구매단계";
-        // Debug.Log("구매 단계");
     }
 
-    void handleBuy()
+    private void handleBuy()
     {
         sellerCount -= 1;
 
-
-        // Debug.Log("buy Item");
+        money -= 100;
 
         if (sellerCount > 0)
         {
-            // Debug.Log("more customers");
         }
         else
         {
-            // Debug.Log("No more customers");
+
             sellerCount = 0;
             startMagicItem();
         }
     }
 
-    void startMagicItem()
+    private void startMagicItem()
     {
         state = State.magic;
 
-        // Debug.Log("해주 단계");
         stateTextObject.text = "해주단계";
 
         preItemCount = itemCount;
     }
 
-    void handleMagic()
+    private void handleMagic()
     {
         if (preItemCount <= 0)
         {
@@ -73,28 +83,28 @@ public class GameManager : MonoBehaviour
         preItemCount -= 1;
     }
 
-    void startSellItem()
+    private void startSellItem()
     {
         state = State.sell;
 
         stateTextObject.text = "판매단계";
-        // Debug.Log("판매 단계");
 
-        preItemCount = itemCount;
+        buyerCount = 5;
     }
 
-    void handleSell()
+    private void handleSell()
     {
-        if (preItemCount <= 0)
+        money += 200;
+
+        if (buyerCount <= 0)
         {
-            // Debug.Log("다 팔았음");
             turnEnd();
         }
 
-        preItemCount -= 1;
+        buyerCount -= 1;
     }
 
-    void turnEnd()
+    private void turnEnd()
     {
         state = State.result;
 
@@ -121,6 +131,7 @@ public class GameManager : MonoBehaviour
         else if (state == State.result)
         {
             Debug.Log("end!!!!!!");
+            startBuyItem();
         }
     }
 }
