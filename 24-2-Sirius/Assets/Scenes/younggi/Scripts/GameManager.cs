@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,6 +11,10 @@ public class GameManager : MonoBehaviour
     }
 
     public State state;
+
+    [SerializeField] TextMeshProUGUI stateTextObject;
+
+
     int sellerCount;
     int buyerCount;
     public int itemCount = 0;
@@ -25,7 +30,8 @@ public class GameManager : MonoBehaviour
         state = State.buy;
         sellerCount = 5;
 
-        Debug.Log("구매 단계");
+        stateTextObject.text = "구매단계";
+        // Debug.Log("구매 단계");
     }
 
     void handleBuy()
@@ -51,7 +57,8 @@ public class GameManager : MonoBehaviour
     {
         state = State.magic;
 
-        Debug.Log("해주 단계");
+        // Debug.Log("해주 단계");
+        stateTextObject.text = "해주단계";
 
         preItemCount = itemCount;
     }
@@ -70,7 +77,8 @@ public class GameManager : MonoBehaviour
     {
         state = State.sell;
 
-        Debug.Log("판매 단계");
+        stateTextObject.text = "판매단계";
+        // Debug.Log("판매 단계");
 
         preItemCount = itemCount;
     }
@@ -79,7 +87,7 @@ public class GameManager : MonoBehaviour
     {
         if (preItemCount <= 0)
         {
-            Debug.Log("다 팔았음");
+            // Debug.Log("다 팔았음");
             turnEnd();
         }
 
@@ -89,6 +97,8 @@ public class GameManager : MonoBehaviour
     void turnEnd()
     {
         state = State.result;
+
+        stateTextObject.text = "정비";
     }
 
     public void handleAction()

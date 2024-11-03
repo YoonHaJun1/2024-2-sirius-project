@@ -347,7 +347,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 
+  m_text: "\uC2DC\uC791!"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b412e49b5ca52554ca24524e8797025c, type: 2}
   m_sharedMaterial: {fileID: 1216895223334918846, guid: b412e49b5ca52554ca24524e8797025c, type: 2}
@@ -454,6 +454,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   state: 0
+  stateTextObject: {fileID: 820459201}
   itemCount: 0
 --- !u!4 &877266806
 Transform:
