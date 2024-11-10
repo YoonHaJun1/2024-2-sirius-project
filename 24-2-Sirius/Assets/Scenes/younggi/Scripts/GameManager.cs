@@ -15,7 +15,6 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI stateTextObject;
     [SerializeField] TextMeshProUGUI wallet;
-    [SerializeField] TextMeshProUGUI roundTextObject;
 
 
     private int round = 0;
@@ -34,7 +33,6 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         wallet.text = money.ToString();
-        roundTextObject.text = round.ToString();
     }
 
     private void startBuyItem()

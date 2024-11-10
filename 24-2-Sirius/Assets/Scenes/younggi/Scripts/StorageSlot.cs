@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+[System.Serializable]
 public class StorageSlot
 {
-    [SerializeField]
-    StorageItemData itemData;
+    [SerializeField] private StorageItemData itemData;
 
     public StorageItemData ItemData => itemData;
     public StorageSlot()
@@ -20,5 +21,10 @@ public class StorageSlot
     public void ClearSlot()
     {
         itemData = null;
+    }
+
+    public void UpdateStorageSlot(StorageItemData data)
+    {
+        itemData = data;
     }
 }

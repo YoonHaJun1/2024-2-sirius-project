@@ -5,9 +5,10 @@ using UnityEngine.Events;
 using System.Linq;
 
 
+[System.Serializable]
 public class StorageSystem
 {
-    [SerializeField] List<StorageSlot> storageSlots;
+    [SerializeField] private List<StorageSlot> storageSlots;
 
     public List<StorageSlot> StorageSlots => storageSlots;
     public int StorageSize => StorageSlots.Count;
@@ -22,5 +23,23 @@ public class StorageSystem
         {
             storageSlots.Add(new StorageSlot());
         }
+    }
+
+    public bool AddItem(StorageItemData addedItem)
+    {
+        if (HasFreeSlot(out StorageSlot freeSlot))
+        {
+            freeSlot.UpdateStorageSlot(addedItem);
+            OnStorageSlotChanged?.Invoke(freeSlot);
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool HasFreeSlot(out StorageSlot freeSlot)
+    {
+        freeSlot = StorageSlots.FirstOrDefault(i => i.ItemData == null);
+        return freeSlot != null;
     }
 }
