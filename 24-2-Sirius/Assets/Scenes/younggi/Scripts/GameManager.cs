@@ -16,6 +16,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI stateTextObject;
     [SerializeField] TextMeshProUGUI wallet;
 
+    [SerializeField] GameObject _customerPrefab;
+    [SerializeField] GameObject cutomerSpwaner;
+
 
     private int round = 0;
     private int money = 10000;
@@ -41,6 +44,10 @@ public class GameManager : MonoBehaviour
 
         round += 1;
         sellerCount = 5;
+        for (int i = 0; i < 5; i++)
+        {
+            Instantiate(_customerPrefab, cutomerSpwaner.transform.position, Quaternion.identity);
+        }
 
         stateTextObject.text = "구매단계";
     }
