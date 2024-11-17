@@ -48,6 +48,13 @@ public class GameManager : MonoBehaviour
     private void CreateCutomerObject()
     {
         instantiatedCustomerObject = Instantiate(_customerPrefab, cutomerSpwaner.transform.position, Quaternion.identity);
+
+        Invoke("OnItemButtonActive", 1.8f);
+
+    }
+
+    public void OnItemButtonActive()
+    {
         itemButton.SetActive(true);
     }
 
@@ -124,8 +131,7 @@ public class GameManager : MonoBehaviour
         {
             instantiatedCustomerObject = null;
 
-            sellerCount = 0;
-            startMagicItem();
+            Invoke("startMagicItem", 4f);
         }
     }
 

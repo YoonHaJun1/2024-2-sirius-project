@@ -418,7 +418,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ef1e6ff85b3c2b4fb306ffc8a827403, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  storageSize: 1
+  storageSize: 5
   storageSystem:
     storageSlots: []
 --- !u!4 &29379931
@@ -1699,13 +1699,14 @@ GameObject:
   - component: {fileID: 767369598}
   - component: {fileID: 767369597}
   - component: {fileID: 767369596}
+  - component: {fileID: 767369599}
   m_Layer: 5
-  m_Name: ItemClick
+  m_Name: Item button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &767369595
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1769,17 +1770,17 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1127570441}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 767369599}
+        m_TargetAssemblyTypeName: ToggleObject, Assembly-CSharp
+        m_MethodName: ToggleSetState
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 1
+          m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &767369597
 MonoBehaviour:
@@ -1819,6 +1820,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 767369594}
   m_CullTransparentMesh: 1
+--- !u!114 &767369599
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 767369594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ae25f3fec5a1044ea5a85bbc31416d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetObject: {fileID: 1127570441}
 --- !u!1 &820459199
 GameObject:
   m_ObjectHideFlags: 0
@@ -1989,6 +2003,7 @@ MonoBehaviour:
   _customerPrefab: {fileID: 5231179083975162334, guid: 78770d8902362624ab0d79d59fdf91c1, type: 3}
   cutomerSpwaner: {fileID: 1787504726}
   player: {fileID: 29379929}
+  itemButton: {fileID: 767369594}
 --- !u!4 &877266806
 Transform:
   m_ObjectHideFlags: 0
@@ -2776,7 +2791,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1127570442
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2920,10 +2935,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1127570441}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 877266805}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: CallNextBuyer
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
