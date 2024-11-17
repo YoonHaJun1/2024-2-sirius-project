@@ -37,9 +37,15 @@ public class StorageSystem
         return false;
     }
 
-    public bool HasFreeSlot(out StorageSlot freeSlot)
+    private bool HasFreeSlot(out StorageSlot freeSlot)
     {
         freeSlot = StorageSlots.FirstOrDefault(i => i.ItemData == null);
         return freeSlot != null;
+    }
+
+    public bool HasSlot()
+    {
+        StorageSlot remainSlot = StorageSlots.FirstOrDefault(i => i.ItemData == null);
+        return remainSlot != null;
     }
 }
