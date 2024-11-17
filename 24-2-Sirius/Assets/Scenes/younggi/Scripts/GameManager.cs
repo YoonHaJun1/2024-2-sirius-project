@@ -18,21 +18,22 @@ public class GameManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI wallet;
 
     [SerializeField] InputField inputField;
-    
+
     [SerializeField] GameObject _customerPrefab;
     [SerializeField] GameObject cutomerSpwaner;
     [SerializeField] GameObject player;
+    [SerializeField] GameObject itemButton;
 
 
     private int round = 0;
     private int money = 10000;
-    public int moneytaken = 0; //흥정 입력값 (int)
     private int sellerCount = 0;
     private int buyerCount = 0;
     private int itemCount = 0;
     private int preItemCount = 0;
 
     private GameObject instantiatedCustomerObject;
+    private Animator animator;
 
     private void Awake()
     {
@@ -44,6 +45,12 @@ public class GameManager : MonoBehaviour
         wallet.text = money.ToString();
     }
 
+    private void CreateCutomerObject()
+    {
+        instantiatedCustomerObject = Instantiate(_customerPrefab, cutomerSpwaner.transform.position, Quaternion.identity);
+        itemButton.SetActive(true);
+    }
+
     private void startBuyItem()
     {
         state = State.buy;
@@ -51,41 +58,67 @@ public class GameManager : MonoBehaviour
         round += 1;
         sellerCount = 5;
 
-        instantiatedCustomerObject = Instantiate(_customerPrefab, cutomerSpwaner.transform.position, Quaternion.identity);
+        CreateCutomerObject();
 
         stateTextObject.text = "구매단계";
     }
 
 
-    public void ValidateInput() //흥정 입력 값 저장 및 지갑에서 돈 빼기
+    public void SuggestMoney() //흥정 입력 값 저장 및 지갑에서 돈 빼기
     {
+        int suggestedMoney = 0; //흥정 입력값 (int)
         string input = inputField.text; //흥정 요구 값 저장
-        int.TryParse(input, out moneytaken); //string -> moneytaken int 값으로 변환
-        Debug.Log(input);
-        Debug.Log(moneytaken);
-        money -= moneytaken; 
-    }
 
+        if (!string.IsNullOrWhiteSpace(input))
+        {
+            int.TryParse(input, out suggestedMoney); //string -> suggestedMoney int 값으로 변환
+        }
+        else
+        {
+            Debug.Log("제대로 제시해!!");
+            return;
+        }
 
-    private void handleBuy()
-    {
-        sellerCount -= 1;
+        if (!player.GetComponent<StorageHolder>().getStorageSystem().HasSlot())
+        {
+            Debug.Log("자리가 없어!!!");
+            return;
+        }
 
         Customer customer = instantiatedCustomerObject.GetComponent<Customer>();
 
 
-        if (player.GetComponent<StorageHolder>().getStorageSystem().AddItem(customer.itemData) == true)
+        if (suggestedMoney >= customer.itemData.value - customer.patienceLevel) //만약 받아주면
         {
+            Debug.Log("좋아용");
+            money -= suggestedMoney;
+
             money -= customer.itemData.value;
+            player.GetComponent<StorageHolder>().getStorageSystem().AddItem(customer.itemData);
+
+            CallNextBuyer();
+        }
+        else
+        {
+            Debug.Log("그 가격은 안되지");
         }
 
+    }
 
-        Destroy(instantiatedCustomerObject);
+
+    public void CallNextBuyer()
+    {
+        Animator animator = instantiatedCustomerObject.GetComponent<Animator>();
+
+        sellerCount -= 1;
+
+        itemButton.SetActive(false);
+        animator.SetBool("exit", true);
 
         if (sellerCount > 0)
         {
 
-            instantiatedCustomerObject = Instantiate(_customerPrefab, cutomerSpwaner.transform.position, Quaternion.identity);
+            Invoke("CreateCutomerObject", 4f);
         }
         else
         {
@@ -148,7 +181,7 @@ public class GameManager : MonoBehaviour
         if (state == State.buy)
         {
             Debug.Log("buy!");
-            handleBuy();
+            CallNextBuyer();
         }
         else if (state == State.magic)
         {
