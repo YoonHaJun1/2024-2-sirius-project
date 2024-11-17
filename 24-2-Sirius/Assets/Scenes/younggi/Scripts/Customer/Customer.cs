@@ -26,8 +26,6 @@ public class Customer : MonoBehaviour
         curseType = (StorageItemData.CurseType)Random.Range(0, 5);
         blessType = (StorageItemData.BlessType)Random.Range(0, 5);
 
-        Debug.Log(curseType);
-        Debug.Log(blessType);
         itemValue = Random.Range(1, 100);
         blessMaxLimit = Random.Range(0, 6);
 
