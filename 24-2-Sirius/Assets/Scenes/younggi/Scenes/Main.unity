@@ -285,7 +285,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ef1e6ff85b3c2b4fb306ffc8a827403, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  storageSize: 5
+  storageSize: 1
   storageSystem:
     storageSlots: []
 --- !u!4 &29379931
@@ -2249,6 +2249,7 @@ MonoBehaviour:
   wallet: {fileID: 14137156}
   _customerPrefab: {fileID: 5231179083975162334, guid: 78770d8902362624ab0d79d59fdf91c1, type: 3}
   cutomerSpwaner: {fileID: 1787504726}
+  player: {fileID: 29379929}
 --- !u!4 &877266806
 Transform:
   m_ObjectHideFlags: 0

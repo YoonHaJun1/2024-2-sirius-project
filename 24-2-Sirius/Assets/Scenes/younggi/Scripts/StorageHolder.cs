@@ -15,4 +15,9 @@ public class StorageHolder : MonoBehaviour
     {
         storageSystem = new StorageSystem(storageSize);
     }
+
+    public StorageSystem getStorageSystem()
+    {
+        return storageSystem;
+    }
 }

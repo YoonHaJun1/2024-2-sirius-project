@@ -9,24 +9,28 @@ public class Customer : MonoBehaviour
     public StorageItemData itemData;
     public Sprite charaImage;
 
-    private int itemId;
+    private int itemType;
     private StorageItemData.CurseType curseType;
     private StorageItemData.BlessType blessType;
-    public int value;
+    public int itemValue;
     private int blessMaxLimit;
 
     private void Awake()
     {
         difficultyLevel = Random.Range(0, 6);
         patienceLevel = Random.Range(0, 6);
-        // itemData = new StorageItemData(itemId, curseType, blessType, value, blessMaxLimit);
+        // itemData = new StorageItemData(itemType, curseType, blessType, itemValue, blessMaxLimit);
         itemData = ScriptableObject.CreateInstance<StorageItemData>();
-        itemData.init(itemId, curseType, blessType, value, blessMaxLimit);
 
-        itemId = Random.Range(0, 6);
-        curseType = (StorageItemData.CurseType)Random.Range(0, 6);
-        blessType = (StorageItemData.BlessType)Random.Range(0, 6);
-        value = Random.Range(0, 100);
+        itemType = Random.Range(0, 6);
+        curseType = (StorageItemData.CurseType)Random.Range(0, 5);
+        blessType = (StorageItemData.BlessType)Random.Range(0, 5);
+
+        Debug.Log(curseType);
+        Debug.Log(blessType);
+        itemValue = Random.Range(1, 100);
         blessMaxLimit = Random.Range(0, 6);
+
+        itemData.init(itemType, curseType, blessType, itemValue, blessMaxLimit);
     }
 }

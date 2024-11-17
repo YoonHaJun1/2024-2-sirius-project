@@ -15,7 +15,7 @@ public class StorageItemData : ScriptableObject
         level1, level2, level3, level4
     }
 
-    public int id;
+    public int type;
     public string itemName;
     [TextArea(4, 4)]
     public string description;
@@ -25,9 +25,9 @@ public class StorageItemData : ScriptableObject
     public int value;
     public int blessMaxLimit;
 
-    public void init(int _id, CurseType _curseType, BlessType _blessType, int _value, int _blessMaxLimit)
+    public void init(int _type, CurseType _curseType, BlessType _blessType, int _value, int _blessMaxLimit)
     {
-        id = _id;
+        type = _type;
         curseType = _curseType;
         blessType = _blessType;
         value = _value;
