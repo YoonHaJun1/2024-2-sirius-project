@@ -16,16 +16,18 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI stateTextObject;
     [SerializeField] TextMeshProUGUI wallet;
-    [SerializeField] TextMeshProUGUI roundTextObject;
+
+    [SerializeField] InputField inputField;
 
 
     private int round = 0;
     private int money = 10000;
-
+    public int moneytaken = 0;
     private int sellerCount = 0;
     private int buyerCount = 0;
     private int itemCount = 0;
     private int preItemCount = 0;
+
 
     private void Awake()
     {
@@ -35,7 +37,6 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         wallet.text = money.ToString();
-        roundTextObject.text = round.ToString();
     }
 
     private void startBuyItem()
@@ -48,6 +49,17 @@ public class GameManager : MonoBehaviour
         stateTextObject.text = "구매단계";
     }
 
+
+    public void ValidateInput()
+    {
+        string input = inputField.text;
+        int.TryParse(input, out moneytaken);
+        Debug.Log(input);
+        Debug.Log(moneytaken);
+        money -= moneytaken;
+    }
+
+
     private void handleBuy()
     {
         sellerCount -= 1;
@@ -59,6 +71,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+
             sellerCount = 0;
             startMagicItem();
         }
