@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class GameManager : MonoBehaviour
@@ -16,6 +17,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI stateTextObject;
     [SerializeField] TextMeshProUGUI wallet;
 
+    [SerializeField] InputField inputField;
+    
     [SerializeField] GameObject _customerPrefab;
     [SerializeField] GameObject cutomerSpwaner;
     [SerializeField] GameObject player;
@@ -23,7 +26,7 @@ public class GameManager : MonoBehaviour
 
     private int round = 0;
     private int money = 10000;
-
+    public int moneytaken = 0; //흥정 입력값 (int)
     private int sellerCount = 0;
     private int buyerCount = 0;
     private int itemCount = 0;
@@ -52,6 +55,17 @@ public class GameManager : MonoBehaviour
 
         stateTextObject.text = "구매단계";
     }
+
+
+    public void ValidateInput() //흥정 입력 값 저장 및 지갑에서 돈 빼기
+    {
+        string input = inputField.text; //흥정 요구 값 저장
+        int.TryParse(input, out moneytaken); //string -> moneytaken int 값으로 변환
+        Debug.Log(input);
+        Debug.Log(moneytaken);
+        money -= moneytaken; 
+    }
+
 
     private void handleBuy()
     {
