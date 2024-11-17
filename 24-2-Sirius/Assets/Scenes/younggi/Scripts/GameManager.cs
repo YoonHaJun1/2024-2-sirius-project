@@ -15,7 +15,10 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI stateTextObject;
     [SerializeField] TextMeshProUGUI wallet;
-    [SerializeField] TextMeshProUGUI roundTextObject;
+
+    [SerializeField] GameObject _customerPrefab;
+    [SerializeField] GameObject cutomerSpwaner;
+    [SerializeField] GameObject player;
 
 
     private int round = 0;
@@ -26,6 +29,8 @@ public class GameManager : MonoBehaviour
     private int itemCount = 0;
     private int preItemCount = 0;
 
+    private GameObject instantiatedCustomerObject;
+
     private void Awake()
     {
         startBuyItem();
@@ -34,7 +39,6 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         wallet.text = money.ToString();
-        roundTextObject.text = round.ToString();
     }
 
     private void startBuyItem()
@@ -44,6 +48,8 @@ public class GameManager : MonoBehaviour
         round += 1;
         sellerCount = 5;
 
+        instantiatedCustomerObject = Instantiate(_customerPrefab, cutomerSpwaner.transform.position, Quaternion.identity);
+
         stateTextObject.text = "구매단계";
     }
 
@@ -51,13 +57,25 @@ public class GameManager : MonoBehaviour
     {
         sellerCount -= 1;
 
-        money -= 100;
+        Customer customer = instantiatedCustomerObject.GetComponent<Customer>();
+
+
+        if (player.GetComponent<StorageHolder>().getStorageSystem().AddItem(customer.itemData) == true)
+        {
+            money -= customer.itemData.value;
+        }
+
+
+        Destroy(instantiatedCustomerObject);
 
         if (sellerCount > 0)
         {
+
+            instantiatedCustomerObject = Instantiate(_customerPrefab, cutomerSpwaner.transform.position, Quaternion.identity);
         }
         else
         {
+            instantiatedCustomerObject = null;
 
             sellerCount = 0;
             startMagicItem();
