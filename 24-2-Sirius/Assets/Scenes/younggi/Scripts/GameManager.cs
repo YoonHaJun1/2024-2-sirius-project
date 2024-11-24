@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] InputField inputField;
 
     [SerializeField] GameObject _customerPrefab;
+    [SerializeField] GameObject _buyerPrefab;
     [SerializeField] GameObject cutomerSpwaner;
     [SerializeField] GameObject player;
     [SerializeField] GameObject itemButton;
@@ -103,7 +104,7 @@ public class GameManager : MonoBehaviour
             money -= customer.itemData.value;
             player.GetComponent<StorageHolder>().getStorageSystem().AddItem(customer.itemData);
 
-            CallNextBuyer();
+            CallNextSeller();
         }
         else
         {
@@ -113,7 +114,8 @@ public class GameManager : MonoBehaviour
     }
 
 
-    public void CallNextBuyer()
+
+    public void CallNextSeller()
     {
         Animator animator = instantiatedCustomerObject.GetComponent<Animator>();
 
@@ -154,6 +156,13 @@ public class GameManager : MonoBehaviour
         preItemCount -= 1;
     }
 
+    private void CreateBuyerObject()
+    {
+        instantiatedCustomerObject = Instantiate(_buyerPrefab, cutomerSpwaner.transform.position, Quaternion.identity);
+
+        Invoke("OnItemButtonActive", 1.8f);
+    }
+
     private void startSellItem()
     {
         state = State.sell;
@@ -161,6 +170,8 @@ public class GameManager : MonoBehaviour
         stateTextObject.text = "판매단계";
 
         buyerCount = 5;
+
+        CreateBuyerObject();
     }
 
     private void handleSell()
@@ -187,7 +198,7 @@ public class GameManager : MonoBehaviour
         if (state == State.buy)
         {
             Debug.Log("buy!");
-            CallNextBuyer();
+            CallNextSeller();
         }
         else if (state == State.magic)
         {
