@@ -17,6 +17,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI stateTextObject;
     [SerializeField] TextMeshProUGUI wallet;
 
+    [SerializeField] TalkManager talkManager;
+    [SerializeField] GameObject dialogueBox;
+    [SerializeField] TextMeshProUGUI dialogueText;
+
+    [SerializeField] GameObject tradeObject;
     [SerializeField] InputField inputField;
 
     [SerializeField] GameObject _customerPrefab;
@@ -33,8 +38,11 @@ public class GameManager : MonoBehaviour
     private int itemCount = 0;
     private int preItemCount = 0;
 
+    private bool isGreetingEnd;
+
     private GameObject instantiatedCustomerObject;
     private Animator animator;
+    private Coroutine currentDialogueCoroutine;
 
     private void Awake()
     {
@@ -44,10 +52,94 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         wallet.text = money.ToString();
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (dialogueBox.activeSelf == true)
+            {
+                OnGreetingTalk();
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            if (dialogueBox.activeSelf == true)
+            {
+                OnGreetingTalk();
+            }
+            else if (tradeObject.activeSelf == true)
+            {
+                SuggestMoney();
+            }
+        }
+
+    }
+
+    public void resetDialogue()
+    {
+        dialogueBox.SetActive(false);
+        talkManager.reset();
+    }
+
+    public void GetBuyLevelGreetingTalk()
+    {
+        string name;
+        string talk;
+
+
+        if (talkManager.GetGreetingTalk(out name, out talk))
+        {
+            Debug.Log("send from " + name);
+            dialogueText.text = talk;
+        }
+        else
+        {
+            isGreetingEnd = true;
+            resetDialogue();
+        }
+
+    }
+
+    private void OnGreetingTalk()
+    {
+        if (state == State.buy)
+        {
+            if (!isGreetingEnd)
+            {
+                dialogueBox.SetActive(true);
+
+                GetBuyLevelGreetingTalk();
+            }
+        }
+
+    }
+
+    private void onTalk(float delay, string talk)
+    {
+        isGreetingEnd = true;
+
+        if (currentDialogueCoroutine != null)
+        {
+            StopCoroutine(currentDialogueCoroutine);
+        }
+        currentDialogueCoroutine = StartCoroutine(onTalkEnumerator(delay, talk));
+    }
+
+    private IEnumerator onTalkEnumerator(float delay, string talk)
+    {
+        dialogueBox.SetActive(true);
+        dialogueText.text = talk;
+
+        yield return new WaitForSeconds(delay);
+
+        currentDialogueCoroutine = null;
+        resetDialogue();
     }
 
     private void CreateCutomerObject()
     {
+        isGreetingEnd = false;
+
         instantiatedCustomerObject = Instantiate(_customerPrefab, cutomerSpwaner.transform.position, Quaternion.identity);
 
         Invoke("OnItemButtonActive", 1.8f);
@@ -57,6 +149,8 @@ public class GameManager : MonoBehaviour
     public void OnItemButtonActive()
     {
         itemButton.SetActive(true);
+
+        OnGreetingTalk();
     }
 
     private void startBuyItem()
@@ -76,6 +170,9 @@ public class GameManager : MonoBehaviour
     {
         int suggestedMoney = 0; //흥정 입력값 (int)
         string input = inputField.text; //흥정 요구 값 저장
+
+        string name;
+        string talk;
 
         if (!string.IsNullOrWhiteSpace(input))
         {
@@ -98,19 +195,39 @@ public class GameManager : MonoBehaviour
 
         if (suggestedMoney >= customer.itemData.value - customer.patienceLevel) //만약 받아주면
         {
-            Debug.Log("좋아용");
+            talkManager.GetTalk(0, 0, 1, out name, out talk);
+
+            onTalk(2.5f, talk);
+
             money -= suggestedMoney;
 
             money -= customer.itemData.value;
             player.GetComponent<StorageHolder>().getStorageSystem().AddItem(customer.itemData);
 
-            CallNextSeller();
+
+
+            Invoke("CallNextSeller", 1.5f);
+
         }
         else
         {
-            Debug.Log("그 가격은 안되지");
+            talkManager.GetTalk(0, 0, 2, out name, out talk);
+
+            onTalk(2.5f, talk); //가격 맘에 안듦
         }
 
+    }
+
+    public void SkipCustomer()
+    {
+        string name;
+        string talk;
+
+        CallNextSeller();
+
+
+        talkManager.GetTalk(1, 0, 0, out name, out talk);
+        onTalk(1f, talk); //구매 포기
     }
 
 
@@ -123,6 +240,9 @@ public class GameManager : MonoBehaviour
 
         itemButton.SetActive(false);
         animator.SetBool("exit", true);
+
+        // Invoke("resetDialogue", 1f);
+
 
         if (sellerCount > 0)
         {
