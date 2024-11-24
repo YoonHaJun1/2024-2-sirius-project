@@ -14,9 +14,15 @@ public class TalkManager : MonoBehaviour
     string jsonText;
     JObject jObject;
     JArray greetingArray;
+    JArray refuseArray;
+    JArray tradeArray;
+    JArray bargainArray;
     JArray conversation;
 
     public Sprite[] portraitArr;
+
+    private int currentGreetingIndex;
+
     void Awake()
     {
         string filePath = Application.dataPath + "/Scenes/juchan/TextReasources/NPC_1000.json";
@@ -31,6 +37,11 @@ public class TalkManager : MonoBehaviour
         }
         jObject = JObject.Parse(jsonText);
         greetingArray = (JArray)jObject["greeting"];
+        refuseArray = (JArray)jObject["refuse"];
+        tradeArray = (JArray)jObject["trade"];
+        bargainArray = (JArray)jObject["bargain"];
+
+        currentGreetingIndex = 0;
     }
 
     // Update is called once per frame
@@ -41,19 +52,45 @@ public class TalkManager : MonoBehaviour
         portraitData.Add(1000 + 2, portraitArr[2]);
         portraitData.Add(1000 + 3, portraitArr[3]);
     }
-
-    public string GetTalk(int scenid, int talkIndex, out string name)
+    public void reset()
     {
-        name = "";
-        conversation = (JArray)greetingArray[scenid];
-        if (talkIndex == conversation.Count)
+        currentGreetingIndex = 0;
+    }
+
+    public bool GetTalk(int scenid, int talkIndex, int talkType, out string name, out string comment)//type 0:refuse, 1:trade, 2:bargain
+    {
+        name = "???";
+        comment = "...";
+
+        JArray array;
+
+        if (talkType == 0)
+        {
+            array = refuseArray;
+        }
+        else if (talkType == 1)
+        {
+            array = tradeArray;
+        }
+        else if (talkType == 2)
+        {
+            array = bargainArray;
+        }
+        else
+        {
+            return false;
+        }
+
+        if (talkIndex >= conversation.Count || scenid >= array.Count)
         {
 
-            return null;
+            return false;
 
         }
         else
         {
+            conversation = (JArray)array[scenid];
+
             var talkProperty = ((JObject)conversation[talkIndex]).Properties().First();
             string _name = talkProperty.Name;
             string talkText = talkProperty.Value.ToString();
@@ -63,7 +100,39 @@ public class TalkManager : MonoBehaviour
 
             name = _name;
 
-            return processedText;
+            comment = processedText;
+
+            return true;
+        }
+    }
+
+    public bool GetGreetingTalk(out string name, out string comment)
+    {
+        comment = "";
+        name = "";
+        conversation = (JArray)greetingArray[0];
+
+        if (currentGreetingIndex == conversation.Count)
+        {
+            currentGreetingIndex = 0; //reset
+            return false;
+
+        }
+        else
+        {
+            var talkProperty = ((JObject)conversation[currentGreetingIndex]).Properties().First();
+            string _name = talkProperty.Name;
+            string talkText = talkProperty.Value.ToString();
+
+            string processedText = talkText.Split("/")[0];
+            int portraitNum = int.Parse(talkText.Split("/")[1]);
+
+            name = _name;
+            comment = processedText;
+
+            currentGreetingIndex++;
+
+            return true;
         }
     }
 
