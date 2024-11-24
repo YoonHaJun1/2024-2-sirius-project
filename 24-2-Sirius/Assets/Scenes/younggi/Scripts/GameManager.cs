@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class GameManager : MonoBehaviour
@@ -15,16 +16,25 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI stateTextObject;
     [SerializeField] TextMeshProUGUI wallet;
-    [SerializeField] TextMeshProUGUI roundTextObject;
+
+    [SerializeField] InputField inputField;
+
+    [SerializeField] GameObject _customerPrefab;
+    [SerializeField] GameObject _buyerPrefab;
+    [SerializeField] GameObject cutomerSpwaner;
+    [SerializeField] GameObject player;
+    [SerializeField] GameObject itemButton;
 
 
     private int round = 0;
     private int money = 10000;
-
     private int sellerCount = 0;
     private int buyerCount = 0;
     private int itemCount = 0;
     private int preItemCount = 0;
+
+    private GameObject instantiatedCustomerObject;
+    private Animator animator;
 
     private void Awake()
     {
@@ -34,7 +44,19 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         wallet.text = money.ToString();
-        roundTextObject.text = round.ToString();
+    }
+
+    private void CreateCutomerObject()
+    {
+        instantiatedCustomerObject = Instantiate(_customerPrefab, cutomerSpwaner.transform.position, Quaternion.identity);
+
+        Invoke("OnItemButtonActive", 1.8f);
+
+    }
+
+    public void OnItemButtonActive()
+    {
+        itemButton.SetActive(true);
     }
 
     private void startBuyItem()
@@ -44,23 +66,74 @@ public class GameManager : MonoBehaviour
         round += 1;
         sellerCount = 5;
 
+        CreateCutomerObject();
+
         stateTextObject.text = "구매단계";
     }
 
-    private void handleBuy()
+
+    public void SuggestMoney() //흥정 입력 값 저장 및 지갑에서 돈 빼기
     {
-        sellerCount -= 1;
+        int suggestedMoney = 0; //흥정 입력값 (int)
+        string input = inputField.text; //흥정 요구 값 저장
 
-        money -= 100;
-
-        if (sellerCount > 0)
+        if (!string.IsNullOrWhiteSpace(input))
         {
+            int.TryParse(input, out suggestedMoney); //string -> suggestedMoney int 값으로 변환
         }
         else
         {
+            Debug.Log("제대로 제시해!!");
+            return;
+        }
 
-            sellerCount = 0;
-            startMagicItem();
+        if (!player.GetComponent<StorageHolder>().getStorageSystem().HasSlot())
+        {
+            Debug.Log("자리가 없어!!!");
+            return;
+        }
+
+        Customer customer = instantiatedCustomerObject.GetComponent<Customer>();
+
+
+        if (suggestedMoney >= customer.itemData.value - customer.patienceLevel) //만약 받아주면
+        {
+            Debug.Log("좋아용");
+            money -= suggestedMoney;
+
+            money -= customer.itemData.value;
+            player.GetComponent<StorageHolder>().getStorageSystem().AddItem(customer.itemData);
+
+            CallNextSeller();
+        }
+        else
+        {
+            Debug.Log("그 가격은 안되지");
+        }
+
+    }
+
+
+
+    public void CallNextSeller()
+    {
+        Animator animator = instantiatedCustomerObject.GetComponent<Animator>();
+
+        sellerCount -= 1;
+
+        itemButton.SetActive(false);
+        animator.SetBool("exit", true);
+
+        if (sellerCount > 0)
+        {
+
+            Invoke("CreateCutomerObject", 4f);
+        }
+        else
+        {
+            instantiatedCustomerObject = null;
+
+            Invoke("startMagicItem", 4f);
         }
     }
 
@@ -83,6 +156,13 @@ public class GameManager : MonoBehaviour
         preItemCount -= 1;
     }
 
+    private void CreateBuyerObject()
+    {
+        instantiatedCustomerObject = Instantiate(_buyerPrefab, cutomerSpwaner.transform.position, Quaternion.identity);
+
+        Invoke("OnItemButtonActive", 1.8f);
+    }
+
     private void startSellItem()
     {
         state = State.sell;
@@ -90,6 +170,8 @@ public class GameManager : MonoBehaviour
         stateTextObject.text = "판매단계";
 
         buyerCount = 5;
+
+        CreateBuyerObject();
     }
 
     private void handleSell()
@@ -116,7 +198,7 @@ public class GameManager : MonoBehaviour
         if (state == State.buy)
         {
             Debug.Log("buy!");
-            handleBuy();
+            CallNextSeller();
         }
         else if (state == State.magic)
         {
