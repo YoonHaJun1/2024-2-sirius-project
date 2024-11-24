@@ -17,6 +17,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI stateTextObject;
     [SerializeField] TextMeshProUGUI wallet;
 
+    [SerializeField] TalkManager talkManager;
+    [SerializeField] GameObject dialogueBox;
+    [SerializeField] TextMeshProUGUI dialogueText;
+
     [SerializeField] InputField inputField;
 
     [SerializeField] GameObject _customerPrefab;
@@ -46,6 +50,24 @@ public class GameManager : MonoBehaviour
         wallet.text = money.ToString();
     }
 
+    private void GetTestTalk()
+    {
+        string name;
+        string talk = "";
+
+
+        talk = talkManager.GetTalk(0, 0, out name);
+        Debug.Log("send from " + name);
+        dialogueText.text = talk;
+    }
+
+    private void OnStartTalk()
+    {
+        dialogueBox.SetActive(true);
+
+        GetTestTalk();
+    }
+
     private void CreateCutomerObject()
     {
         instantiatedCustomerObject = Instantiate(_customerPrefab, cutomerSpwaner.transform.position, Quaternion.identity);
@@ -57,6 +79,8 @@ public class GameManager : MonoBehaviour
     public void OnItemButtonActive()
     {
         itemButton.SetActive(true);
+
+        OnStartTalk();
     }
 
     private void startBuyItem()

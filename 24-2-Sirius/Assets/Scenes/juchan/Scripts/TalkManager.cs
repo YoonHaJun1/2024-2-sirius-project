@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Linq;
 
 public class TalkManager : MonoBehaviour
 {
@@ -41,14 +42,28 @@ public class TalkManager : MonoBehaviour
         portraitData.Add(1000 + 3, portraitArr[3]);
     }
 
-    public JObject GetTalk(int scenid, int talkIndex)
+    public string GetTalk(int scenid, int talkIndex, out string name)
     {
+        name = "";
         conversation = (JArray)greetingArray[scenid];
-        if (talkIndex == conversation.Count){
+        if (talkIndex == conversation.Count)
+        {
+
             return null;
-                
-        } else {
-            return (JObject)conversation[talkIndex];
+
+        }
+        else
+        {
+            var talkProperty = ((JObject)conversation[talkIndex]).Properties().First();
+            string _name = talkProperty.Name;
+            string talkText = talkProperty.Value.ToString();
+
+            string processedText = talkText.Split("/")[0];
+            int portraitNum = int.Parse(talkText.Split("/")[1]);
+
+            name = _name;
+
+            return processedText;
         }
     }
 
