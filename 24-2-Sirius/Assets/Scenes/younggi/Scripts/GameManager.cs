@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject dialogueBox;
     [SerializeField] TextMeshProUGUI dialogueText;
 
+    [SerializeField] GameObject tradeObject;
     [SerializeField] InputField inputField;
 
     [SerializeField] GameObject _customerPrefab;
@@ -37,6 +38,8 @@ public class GameManager : MonoBehaviour
     private int itemCount = 0;
     private int preItemCount = 0;
 
+    private bool isGreetingEnd;
+
     private GameObject instantiatedCustomerObject;
     private Animator animator;
     private Coroutine currentDialogueCoroutine;
@@ -49,6 +52,27 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         wallet.text = money.ToString();
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (dialogueBox.activeSelf == true)
+            {
+                OnGreetingTalk();
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            if (dialogueBox.activeSelf == true)
+            {
+                OnGreetingTalk();
+            }
+            else if (tradeObject.activeSelf == true)
+            {
+                SuggestMoney();
+            }
+        }
+
     }
 
     public void resetDialogue()
@@ -57,7 +81,7 @@ public class GameManager : MonoBehaviour
         talkManager.reset();
     }
 
-    public void GetTestTalk()
+    public void GetBuyLevelGreetingTalk()
     {
         string name;
         string talk;
@@ -70,6 +94,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            isGreetingEnd = true;
             resetDialogue();
         }
 
@@ -77,13 +102,22 @@ public class GameManager : MonoBehaviour
 
     private void OnGreetingTalk()
     {
-        dialogueBox.SetActive(true);
+        if (state == State.buy)
+        {
+            if (!isGreetingEnd)
+            {
+                dialogueBox.SetActive(true);
 
-        GetTestTalk();
+                GetBuyLevelGreetingTalk();
+            }
+        }
+
     }
 
     private void onTalk(float delay, string talk)
     {
+        isGreetingEnd = true;
+
         if (currentDialogueCoroutine != null)
         {
             StopCoroutine(currentDialogueCoroutine);
@@ -104,6 +138,8 @@ public class GameManager : MonoBehaviour
 
     private void CreateCutomerObject()
     {
+        isGreetingEnd = false;
+
         instantiatedCustomerObject = Instantiate(_customerPrefab, cutomerSpwaner.transform.position, Quaternion.identity);
 
         Invoke("OnItemButtonActive", 1.8f);
