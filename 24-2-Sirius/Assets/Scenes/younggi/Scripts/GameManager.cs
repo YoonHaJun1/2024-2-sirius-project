@@ -74,6 +74,19 @@ public class GameManager : MonoBehaviour
 
     public void SuggestMoney() //흥정 입력 값 저장 및 지갑에서 돈 빼기
     {
+        if (state ==  State.buy)
+        {
+            SuggestBuy();
+        }
+        if (state == State.sell)
+        {
+            SuggestSell();
+        }
+        
+    }
+
+    public void SuggestBuy()
+    {
         int suggestedMoney = 0; //흥정 입력값 (int)
         string input = inputField.text; //흥정 요구 값 저장
 
@@ -110,10 +123,12 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("그 가격은 안되지");
         }
-
     }
 
-
+    public void SuggestSell()
+    {
+        
+    }
 
     public void CallNextSeller()
     {

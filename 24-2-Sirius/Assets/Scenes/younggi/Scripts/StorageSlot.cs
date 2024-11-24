@@ -27,4 +27,9 @@ public class StorageSlot
     {
         itemData = data;
     }
+
+    public void DisplayStorageSlot()
+    {
+        
+    }
 }
