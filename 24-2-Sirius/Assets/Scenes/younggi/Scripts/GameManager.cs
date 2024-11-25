@@ -75,7 +75,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void resetDialogue()
+    private void resetDialogue()
     {
         dialogueBox.SetActive(false);
         talkManager.reset();
@@ -146,7 +146,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void OnItemButtonActive()
+    private void OnItemButtonActive()
     {
         itemButton.SetActive(true);
 
@@ -168,7 +168,7 @@ public class GameManager : MonoBehaviour
 
     public void SuggestMoney() //흥정 입력 값 저장 및 지갑에서 돈 빼기
     {
-        if (state ==  State.buy)
+        if (state == State.buy)
         {
             SuggestBuy();
         }
@@ -176,10 +176,10 @@ public class GameManager : MonoBehaviour
         {
             SuggestSell();
         }
-        
+
     }
 
-    public void SuggestBuy()
+    private void SuggestBuy()
     {
         int suggestedMoney = 0; //흥정 입력값 (int)
         string input = inputField.text; //흥정 요구 값 저장
@@ -230,9 +230,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void SuggestSell()
+    private void SuggestSell()
     {
-        
+
     }
 
     public void SkipCustomer()
@@ -248,7 +248,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-    public void CallNextSeller()
+    private void CallNextSeller()
     {
         Animator animator = instantiatedCustomerObject.GetComponent<Animator>();
 
