@@ -168,6 +168,19 @@ public class GameManager : MonoBehaviour
 
     public void SuggestMoney() //흥정 입력 값 저장 및 지갑에서 돈 빼기
     {
+        if (state ==  State.buy)
+        {
+            SuggestBuy();
+        }
+        if (state == State.sell)
+        {
+            SuggestSell();
+        }
+        
+    }
+
+    public void SuggestBuy()
+    {
         int suggestedMoney = 0; //흥정 입력값 (int)
         string input = inputField.text; //흥정 요구 값 저장
 
@@ -215,7 +228,11 @@ public class GameManager : MonoBehaviour
 
             onTalk(2.5f, talk); //가격 맘에 안듦
         }
+    }
 
+    public void SuggestSell()
+    {
+        
     }
 
     public void SkipCustomer()
@@ -229,7 +246,6 @@ public class GameManager : MonoBehaviour
         talkManager.GetTalk(1, 0, 0, out name, out talk);
         onTalk(1f, talk); //구매 포기
     }
-
 
 
     public void CallNextSeller()
