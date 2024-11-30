@@ -158,7 +158,7 @@ public class GameManager : MonoBehaviour
         state = State.buy;
 
         round += 1;
-        sellerCount = 5;
+        sellerCount = 3;
 
         CreateCutomerObject();
 
@@ -205,7 +205,6 @@ public class GameManager : MonoBehaviour
 
         Customer customer = instantiatedCustomerObject.GetComponent<Customer>();
 
-
         if (suggestedMoney >= customer.itemData.value - customer.patienceLevel) //만약 받아주면
         {
             talkManager.GetTalk(0, 0, 1, out name, out talk);
@@ -217,10 +216,7 @@ public class GameManager : MonoBehaviour
             money -= customer.itemData.value;
             player.GetComponent<StorageHolder>().getStorageSystem().AddItem(customer.itemData);
 
-
-
             Invoke("CallNextSeller", 1.5f);
-
         }
         else
         {
@@ -294,8 +290,14 @@ public class GameManager : MonoBehaviour
 
     private void CreateBuyerObject()
     {
-        instantiatedCustomerObject = Instantiate(_buyerPrefab, cutomerSpwaner.transform.position, Quaternion.identity);
+        GameObject instantiatedCustomerObject = Instantiate(_buyerPrefab, cutomerSpwaner.transform.position, Quaternion.identity);
 
+        // Set the player reference
+        Buyer buyer = instantiatedCustomerObject.GetComponent<Buyer>();
+        if (buyer != null)
+        {
+            buyer.SetPlayer(player);
+        }
         Invoke("OnItemButtonActive", 1.8f);
     }
 

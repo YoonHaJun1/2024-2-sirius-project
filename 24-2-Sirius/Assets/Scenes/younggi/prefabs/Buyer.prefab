@@ -101,6 +101,8 @@ MonoBehaviour:
   itemIndex: 0
   priceLevel: 0
   isGoodBuyer: 0
+  buyerMoney: 0
+  player: {fileID: 0}
 --- !u!95 &5451392610536554530
 Animator:
   serializedVersion: 5
