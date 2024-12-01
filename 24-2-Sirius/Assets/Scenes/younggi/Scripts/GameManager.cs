@@ -206,7 +206,7 @@ public class GameManager : MonoBehaviour
 
         Customer customer = instantiatedCustomerObject.GetComponent<Customer>();
 
-        if (suggestedMoney >= customer.itemData.value - customer.patienceLevel) //만약 받아주면
+        if (suggestedMoney >= customer.itemData.value - customer.difficultyLevel) //만약 받아주면
         {
             talkManager.GetTalk(0, 0, 1, out name, out talk);
 
@@ -221,9 +221,18 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            talkManager.GetTalk(0, 0, 2, out name, out talk);
+            if (customer.patienceLevel == 0)
+            {
+                Debug.Log("더이상 흥정을 받아들이지 않겠네");
+                Invoke("CallNextSeller", 1.5f);
 
-            onTalk(2.5f, talk); //가격 맘에 안듦
+            }
+            else
+            {
+                talkManager.GetTalk(0, 0, 2, out name, out talk);
+                customer.patienceLevel -= 1;
+                onTalk(2.5f, talk); //가격 맘에 안듦
+            }   
         }
     }
 
@@ -233,8 +242,8 @@ public class GameManager : MonoBehaviour
         string input = inputField.text; //흥정 요구 값 저장
         SetBuyer(GameObject.Find("Buyer(Clone)"));
         Buyer buyerComponent = buyer.GetComponent<Buyer>();
-        //string name;
-        //string talk;
+        string name;
+        string talk;
 
         
         if (!string.IsNullOrWhiteSpace(input))
@@ -259,9 +268,17 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("그 가격에는 구매할 수 없어");
-
-            //onTalk(2.5f, talk); //가격 맘에 안듦
+            if (buyerComponent.patienceLevel == 0)
+            {
+                Debug.Log("더이상 흥정을 받아들이지 않겠네");
+                Invoke("CallNextBuyer", 1.5f);
+            }
+            else
+            {
+                talkManager.GetTalk(0, 0, 2, out name, out talk);
+                buyerComponent.patienceLevel -= 1;
+                onTalk(2.5f, talk); //가격 맘에 안듦
+            }   
         }
     }
 

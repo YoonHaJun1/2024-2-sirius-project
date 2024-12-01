@@ -17,7 +17,7 @@ public class Buyer : MonoBehaviour
     
     private void Awake()
     {
-        patienceLevel = Random.Range(2, 3);
+        patienceLevel = Random.Range(2, 5);
         itemIndex = 0;
         priceLevel = Random.Range(0, 6);
         GoodorBadDecide();
@@ -82,7 +82,7 @@ public class Buyer : MonoBehaviour
     {
         int goodorBad = 0;
         goodorBad = Random.Range(1, 100);
-        if (goodorBad > 85)
+        if (goodorBad > 90)
         {
             isGoodBuyer = true;
         }

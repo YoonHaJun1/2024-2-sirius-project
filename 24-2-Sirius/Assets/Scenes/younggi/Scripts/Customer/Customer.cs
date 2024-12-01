@@ -17,8 +17,8 @@ public class Customer : MonoBehaviour
 
     private void Awake()
     {
-        difficultyLevel = Random.Range(0, 6);
-        patienceLevel = Random.Range(0, 6);
+        difficultyLevel = Random.Range(0, 6); //흥정 받아들이는 금액
+        patienceLevel = Random.Range(2, 4); //흥정 횟수
         // itemData = new StorageItemData(itemType, curseType, blessType, itemValue, blessMaxLimit);
         itemData = ScriptableObject.CreateInstance<StorageItemData>();
 
