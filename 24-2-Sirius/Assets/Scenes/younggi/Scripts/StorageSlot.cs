@@ -13,6 +13,7 @@ public class StorageSlot
     {
         ClearSlot();
     }
+    
     public StorageSlot(StorageItemData source)
     {
         itemData = source;

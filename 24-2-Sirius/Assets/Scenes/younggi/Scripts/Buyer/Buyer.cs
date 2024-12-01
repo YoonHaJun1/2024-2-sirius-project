@@ -10,7 +10,7 @@ public class Buyer : MonoBehaviour
     public bool isGoodBuyer;
     public int buyerMoney;
     public int patienceLevel; //흥정 받아들이는 횟수
-    public int requestmoney;
+    public double profitRatio;
     private StorageSystem storageSystem; // Reference to the StorageSystem
     private GameObject player;
     public StorageItemData selectedItem;
@@ -22,11 +22,10 @@ public class Buyer : MonoBehaviour
         priceLevel = Random.Range(0, 6);
         GoodorBadDecide();
         SetPlayer(GameObject.Find("Player"));
-        buyerMoney = Random.Range(10, 100); //Buyer 현재 돈
+        buyerMoney =0; //Buyer 현재 돈
         DecideItem(); //Buyer 아이탬 구매 선택
-        DecidePrice(); //Buyer 가 제시할 금액
-        Debug.Log(isGoodBuyer);
-        Debug.Log(requestmoney);
+        Debug.Log("isGoodBuyer: " +isGoodBuyer);
+        Debug.Log("profitRatio: " + profitRatio);
     }
 
 
@@ -50,45 +49,56 @@ public class Buyer : MonoBehaviour
         StorageSystem storageSystem = storageHolder.getStorageSystem();
         if (storageSystem == null) return;
 
-        List<StorageItemData> affordableItems = storageSystem.StorageSlots
-            .Where(slot => slot.ItemData != null && slot.ItemData.value <= buyerMoney)
-            .Select(slot => slot.ItemData)
-            .ToList();
-        Debug.Log($"{affordableItems.Count} items.");
 
-        foreach (var item in affordableItems)
-        {
-            Debug.Log($"Affordable Item Value: {item.value}");
+        List<StorageItemData> affordableItems = null;
+        
+        if(storageSystem.HasItem()){
+            foreach (var slot in storageSystem.StorageSlots)
+            {
+                if(slot.ItemData != null && slot.ItemData.value <= buyerMoney){
+                    affordableItems.Add(slot.ItemData);
+                }
+            }
+ 
+            // affordableItems = storageSystem.StorageSlots
+            // .Where(slot => slot.ItemData != null && slot.ItemData.value <= buyerMoney)
+            // .Select(slot => slot.ItemData)
+            // .ToList();
         }
 
-        int randomIndex = Random.Range(0, affordableItems.Count);
-        selectedItem = affordableItems[randomIndex];
-        Debug.Log($"Selected Item Value: {selectedItem.value}");
-    }
+        // foreach (var item in affordableItems)
+        // {
+        //     Debug.Log($"Affordable Item Value: {item.value}");
+        // }
 
-    public void DecidePrice()
-    {
-        if (!isGoodBuyer) //사기꾼
-        {
-            requestmoney = Random.Range(-50,-1);
+        if(affordableItems == null){
+            selectedItem = null;
+        }else{
+            Debug.Log($"{affordableItems.Count} items.");
+
+            int randomIndex = Random.Range(0, affordableItems.Count);
+            selectedItem = affordableItems[randomIndex];
+            Debug.Log($"Selected Item Value: {selectedItem.value}");
+            Debug.Log($"{(selectedItem.value*profitRatio)}원에 살게요");
         }
-        else //구매자
-        {
-            requestmoney = Random.Range(15, 50);
-        }
+
+        
     }
 
     public void GoodorBadDecide()
     {
-        int goodorBad = 0;
-        goodorBad = Random.Range(1, 100);
-        if (goodorBad > 90)
+        int goodorBad = Random.Range(1, 100);
+
+        Debug.Log("goodorBad amount: " + goodorBad);
+        if (goodorBad < 90)
         {
             isGoodBuyer = true;
+            profitRatio = Random.Range(0.8f, 1.2f);
         }
         else
         {
             isGoodBuyer = false;
+            profitRatio = Random.Range(0.1f, 0.7f);
         }
     }
 }

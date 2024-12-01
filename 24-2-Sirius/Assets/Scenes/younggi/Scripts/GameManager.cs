@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour
     private bool isGreetingEnd;
 
     private GameObject instantiatedCustomerObject;
+    private GameObject instantiatedBuyerObject;
     private Animator animator;
     private Coroutine currentDialogueCoroutine;
     private GameObject buyer;
@@ -213,8 +214,6 @@ public class GameManager : MonoBehaviour
             onTalk(2.5f, talk);
 
             money -= suggestedMoney;
-
-            money -= customer.itemData.value; //이거 왜 두번 빼지
             player.GetComponent<StorageHolder>().getStorageSystem().AddItem(customer.itemData);
 
             Invoke("CallNextSeller", 1.5f);
@@ -226,6 +225,11 @@ public class GameManager : MonoBehaviour
                 Debug.Log("더이상 흥정을 받아들이지 않겠네");
                 Invoke("CallNextSeller", 1.5f);
 
+            }
+            else if (suggestedMoney <= customer.itemData.value * 0.2)
+            {
+                Debug.Log("이런 말도 안되는 가격을 제시하다니");
+                Invoke("CallNextSeller", 1.5f);
             }
             else
             {
@@ -240,11 +244,9 @@ public class GameManager : MonoBehaviour
     {
         int suggestedMoney = 0; //흥정 입력값 (int)
         string input = inputField.text; //흥정 요구 값 저장
-        SetBuyer(GameObject.Find("Buyer(Clone)"));
-        Buyer buyerComponent = buyer.GetComponent<Buyer>();
+        Buyer buyerComponent = instantiatedBuyerObject.GetComponent<Buyer>();
         string name;
         string talk;
-
         
         if (!string.IsNullOrWhiteSpace(input))
         {
@@ -256,7 +258,7 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        if (suggestedMoney <= buyerComponent.selectedItem.value + buyerComponent.requestmoney) //만약 받아주면
+        if (suggestedMoney <= buyerComponent.selectedItem.value * buyerComponent.profitRatio) //만약 받아주면
         {
             Debug.Log("좋아요");
 
@@ -327,8 +329,7 @@ public class GameManager : MonoBehaviour
 
     private void CallNextBuyer()
     {
-        instantiatedCustomerObject = GameObject.Find("Buyer(Clone)");
-        Animator animator = instantiatedCustomerObject.GetComponent<Animator>();
+        Animator animator = instantiatedBuyerObject.GetComponent<Animator>();
 
         buyerCount -= 1;
 
@@ -341,9 +342,9 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            instantiatedCustomerObject = null;
+            instantiatedBuyerObject = null;
 
-            Invoke("startResultItem", 4f);
+            Invoke("turnEnd", 4f);
         }
     }
 
@@ -368,15 +369,17 @@ public class GameManager : MonoBehaviour
 
     private void CreateBuyerObject()
     {
-        GameObject instantiatedCustomerObject = Instantiate(_buyerPrefab, cutomerSpwaner.transform.position, Quaternion.identity);
+        instantiatedBuyerObject = Instantiate(_buyerPrefab, cutomerSpwaner.transform.position, Quaternion.identity);
         
-        // Set the player reference
-        Buyer buyer = instantiatedCustomerObject.GetComponent<Buyer>();
-        if (buyer != null)
-        {
-           buyer.SetPlayer(player);
+        Buyer buyer = instantiatedBuyerObject.GetComponent<Buyer>();
+    
+        if(buyer.selectedItem == null){
+            Debug.Log("살게 없네");
+            Invoke("CallNextBuyer", 1.5f);
+        }else{
+            Invoke("OnItemButtonActive", 1.8f);
         }
-        Invoke("OnItemButtonActive", 1.8f);
+        
     }
 
     private void startSellItem()
@@ -385,28 +388,20 @@ public class GameManager : MonoBehaviour
 
         stateTextObject.text = "판매단계";
 
-        buyerCount = 5;
+        buyerCount = 3;
 
         CreateBuyerObject();
-    }
-
-    private void handleSell()
-    {
-        money += 200;
-
-        if (buyerCount <= 0)
-        {
-            turnEnd();
-        }
-
-        buyerCount -= 1;
     }
 
     private void turnEnd()
     {
         state = State.result;
 
-        stateTextObject.text = "정비";
+        stateTextObject.text = "결산";
+
+        if(round == 4){
+            Debug.Log("돈 내");
+        }
     }
 
     public void handleAction()
@@ -424,7 +419,7 @@ public class GameManager : MonoBehaviour
         else if (state == State.sell)
         {
             Debug.Log("sell!!");
-            handleSell();
+            CallNextBuyer();
         }
         else if (state == State.result)
         {
