@@ -2283,7 +2283,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62633c837727e7a4f98733e7bad940ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  state: 0
+  state: 2
   stateTextObject: {fileID: 820459201}
   wallet: {fileID: 14137156}
   talkManager: {fileID: 1525296784}

@@ -41,8 +41,10 @@ public class GameManager : MonoBehaviour
     private bool isGreetingEnd;
 
     private GameObject instantiatedCustomerObject;
+    private GameObject instantiatedBuyerObject;
     private Animator animator;
     private Coroutine currentDialogueCoroutine;
+    private GameObject buyer;
 
     private void Awake()
     {
@@ -158,7 +160,7 @@ public class GameManager : MonoBehaviour
         state = State.buy;
 
         round += 1;
-        sellerCount = 5;
+        sellerCount = 3;
 
         CreateCutomerObject();
 
@@ -205,34 +207,86 @@ public class GameManager : MonoBehaviour
 
         Customer customer = instantiatedCustomerObject.GetComponent<Customer>();
 
-
-        if (suggestedMoney >= customer.itemData.value - customer.patienceLevel) //만약 받아주면
+        if (suggestedMoney >= customer.itemData.value - customer.difficultyLevel) //만약 받아주면
         {
             talkManager.GetTalk(0, 0, 1, out name, out talk);
 
             onTalk(2.5f, talk);
 
             money -= suggestedMoney;
-
-            money -= customer.itemData.value;
             player.GetComponent<StorageHolder>().getStorageSystem().AddItem(customer.itemData);
 
-
-
             Invoke("CallNextSeller", 1.5f);
-
         }
         else
         {
-            talkManager.GetTalk(0, 0, 2, out name, out talk);
+            if (customer.patienceLevel == 0)
+            {
+                Debug.Log("더이상 흥정을 받아들이지 않겠네");
+                Invoke("CallNextSeller", 1.5f);
 
-            onTalk(2.5f, talk); //가격 맘에 안듦
+            }
+            else if (suggestedMoney <= customer.itemData.value * 0.2)
+            {
+                Debug.Log("이런 말도 안되는 가격을 제시하다니");
+                Invoke("CallNextSeller", 1.5f);
+            }
+            else
+            {
+                talkManager.GetTalk(0, 0, 2, out name, out talk);
+                customer.patienceLevel -= 1;
+                onTalk(2.5f, talk); //가격 맘에 안듦
+            }   
         }
     }
 
     private void SuggestSell()
     {
+        int suggestedMoney = 0; //흥정 입력값 (int)
+        string input = inputField.text; //흥정 요구 값 저장
+        Buyer buyerComponent = instantiatedBuyerObject.GetComponent<Buyer>();
+        string name;
+        string talk;
+        
+        if (!string.IsNullOrWhiteSpace(input))
+        {
+            int.TryParse(input, out suggestedMoney); //string -> suggestedMoney int 값으로 변환
+        }
+        else
+        {
+            Debug.Log("제대로 제시해!!");
+            return;
+        }
 
+        if (suggestedMoney <= buyerComponent.selectedItem.value * buyerComponent.profitRatio) //만약 받아주면
+        {
+            Debug.Log("좋아요");
+
+            money += suggestedMoney;
+
+            player.GetComponent<StorageHolder>().getStorageSystem().RemoveItem(buyerComponent.selectedItem);
+
+            Invoke("CallNextBuyer", 1.5f);
+        }
+        else
+        {
+            if (buyerComponent.patienceLevel == 0)
+            {
+                Debug.Log("더이상 흥정을 받아들이지 않겠네");
+                Invoke("CallNextBuyer", 1.5f);
+            }
+            else
+            {
+                talkManager.GetTalk(0, 0, 2, out name, out talk);
+                buyerComponent.patienceLevel -= 1;
+                onTalk(2.5f, talk); //가격 맘에 안듦
+            }   
+        }
+    }
+
+    public void SetBuyer(GameObject buyerObject)
+    {
+        buyer = buyerObject;
     }
 
     public void SkipCustomer()
@@ -273,6 +327,27 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void CallNextBuyer()
+    {
+        Animator animator = instantiatedBuyerObject.GetComponent<Animator>();
+
+        buyerCount -= 1;
+
+        itemButton.SetActive(false);
+        animator.SetBool("exit", true);
+
+        if (buyerCount > 0)
+        {
+            Invoke("CreateBuyerObject", 4f);
+        }
+        else
+        {
+            instantiatedBuyerObject = null;
+
+            Invoke("turnEnd", 4f);
+        }
+    }
+
     private void startMagicItem()
     {
         state = State.magic;
@@ -294,9 +369,17 @@ public class GameManager : MonoBehaviour
 
     private void CreateBuyerObject()
     {
-        instantiatedCustomerObject = Instantiate(_buyerPrefab, cutomerSpwaner.transform.position, Quaternion.identity);
-
-        Invoke("OnItemButtonActive", 1.8f);
+        instantiatedBuyerObject = Instantiate(_buyerPrefab, cutomerSpwaner.transform.position, Quaternion.identity);
+        
+        Buyer buyer = instantiatedBuyerObject.GetComponent<Buyer>();
+    
+        if(buyer.selectedItem == null){
+            Debug.Log("살게 없네");
+            Invoke("CallNextBuyer", 1.5f);
+        }else{
+            Invoke("OnItemButtonActive", 1.8f);
+        }
+        
     }
 
     private void startSellItem()
@@ -305,28 +388,20 @@ public class GameManager : MonoBehaviour
 
         stateTextObject.text = "판매단계";
 
-        buyerCount = 5;
+        buyerCount = 3;
 
         CreateBuyerObject();
-    }
-
-    private void handleSell()
-    {
-        money += 200;
-
-        if (buyerCount <= 0)
-        {
-            turnEnd();
-        }
-
-        buyerCount -= 1;
     }
 
     private void turnEnd()
     {
         state = State.result;
 
-        stateTextObject.text = "정비";
+        stateTextObject.text = "결산";
+
+        if(round == 4){
+            Debug.Log("돈 내");
+        }
     }
 
     public void handleAction()
@@ -344,7 +419,7 @@ public class GameManager : MonoBehaviour
         else if (state == State.sell)
         {
             Debug.Log("sell!!");
-            handleSell();
+            CallNextBuyer();
         }
         else if (state == State.result)
         {
