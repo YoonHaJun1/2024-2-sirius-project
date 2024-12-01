@@ -43,6 +43,7 @@ public class GameManager : MonoBehaviour
     private GameObject instantiatedCustomerObject;
     private Animator animator;
     private Coroutine currentDialogueCoroutine;
+    private GameObject buyer;
 
     private void Awake()
     {
@@ -213,7 +214,7 @@ public class GameManager : MonoBehaviour
 
             money -= suggestedMoney;
 
-            money -= customer.itemData.value;
+            money -= customer.itemData.value; //이거 왜 두번 빼지
             player.GetComponent<StorageHolder>().getStorageSystem().AddItem(customer.itemData);
 
             Invoke("CallNextSeller", 1.5f);
@@ -228,7 +229,45 @@ public class GameManager : MonoBehaviour
 
     private void SuggestSell()
     {
+        int suggestedMoney = 0; //흥정 입력값 (int)
+        string input = inputField.text; //흥정 요구 값 저장
+        SetBuyer(GameObject.Find("Buyer(Clone)"));
+        Buyer buyerComponent = buyer.GetComponent<Buyer>();
+        //string name;
+        //string talk;
 
+        
+        if (!string.IsNullOrWhiteSpace(input))
+        {
+            int.TryParse(input, out suggestedMoney); //string -> suggestedMoney int 값으로 변환
+        }
+        else
+        {
+            Debug.Log("제대로 제시해!!");
+            return;
+        }
+
+        if (suggestedMoney <= buyerComponent.selectedItem.value + buyerComponent.requestmoney) //만약 받아주면
+        {
+            Debug.Log("좋아요");
+
+            money += suggestedMoney;
+
+            player.GetComponent<StorageHolder>().getStorageSystem().RemoveItem(buyerComponent.selectedItem);
+
+            Invoke("CallNextBuyer", 1.5f);
+        }
+        else
+        {
+            Debug.Log("그 가격에는 구매할 수 없어");
+
+            //onTalk(2.5f, talk); //가격 맘에 안듦
+        }
+    }
+
+    public void SetBuyer(GameObject buyerObject)
+    {
+        buyer = buyerObject;
     }
 
     public void SkipCustomer()
@@ -269,6 +308,28 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void CallNextBuyer()
+    {
+        instantiatedCustomerObject = GameObject.Find("Buyer(Clone)");
+        Animator animator = instantiatedCustomerObject.GetComponent<Animator>();
+
+        buyerCount -= 1;
+
+        itemButton.SetActive(false);
+        animator.SetBool("exit", true);
+
+        if (buyerCount > 0)
+        {
+            Invoke("CreateBuyerObject", 4f);
+        }
+        else
+        {
+            instantiatedCustomerObject = null;
+
+            Invoke("startResultItem", 4f);
+        }
+    }
+
     private void startMagicItem()
     {
         state = State.magic;
@@ -291,12 +352,12 @@ public class GameManager : MonoBehaviour
     private void CreateBuyerObject()
     {
         GameObject instantiatedCustomerObject = Instantiate(_buyerPrefab, cutomerSpwaner.transform.position, Quaternion.identity);
-
+        
         // Set the player reference
         Buyer buyer = instantiatedCustomerObject.GetComponent<Buyer>();
         if (buyer != null)
         {
-            buyer.SetPlayer(player);
+           buyer.SetPlayer(player);
         }
         Invoke("OnItemButtonActive", 1.8f);
     }

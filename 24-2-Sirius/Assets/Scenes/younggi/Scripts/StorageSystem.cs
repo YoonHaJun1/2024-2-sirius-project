@@ -48,4 +48,17 @@ public class StorageSystem
         StorageSlot remainSlot = StorageSlots.FirstOrDefault(i => i.ItemData == null);
         return remainSlot != null;
     }
+
+     public bool RemoveItem(StorageItemData itemToRemove)
+    {
+        StorageSlot slotToRemove = storageSlots.FirstOrDefault(i => i.ItemData == itemToRemove);
+        if (slotToRemove != null)
+        {
+            slotToRemove.ClearSlot(); // Clear the slot
+            //Debug.Log("Item removed");
+            return true;
+        }
+        //Debug.Log("Item to remove not found");
+        return false; // Item not found in storage
+    }
 }
