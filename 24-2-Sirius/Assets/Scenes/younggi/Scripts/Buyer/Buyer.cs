@@ -10,6 +10,7 @@ public class Buyer : MonoBehaviour
     public bool isGoodBuyer;
     public int buyerMoney;
     public int patienceLevel; //흥정 받아들이는 횟수
+    private int firstpatienceLevel;
     public double profitRatio;
     private StorageSystem storageSystem; // Reference to the StorageSystem
     private GameObject player;
@@ -17,12 +18,13 @@ public class Buyer : MonoBehaviour
     
     private void Awake()
     {
-        patienceLevel = Random.Range(2, 5);
+        patienceLevel = Random.Range(3, 8);
+        firstpatienceLevel = patienceLevel;
         itemIndex = 0;
         priceLevel = Random.Range(0, 6);
         GoodorBadDecide();
         SetPlayer(GameObject.Find("Player"));
-        buyerMoney =0; //Buyer 현재 돈
+        buyerMoney =100; //Buyer 현재 돈
         DecideItem(); //Buyer 아이탬 구매 선택
         Debug.Log("isGoodBuyer: " +isGoodBuyer);
         Debug.Log("profitRatio: " + profitRatio);
@@ -59,11 +61,6 @@ public class Buyer : MonoBehaviour
                     affordableItems.Add(slot.ItemData);
                 }
             }
- 
-            // affordableItems = storageSystem.StorageSlots
-            // .Where(slot => slot.ItemData != null && slot.ItemData.value <= buyerMoney)
-            // .Select(slot => slot.ItemData)
-            // .ToList();
         }
 
         // foreach (var item in affordableItems)
@@ -93,13 +90,53 @@ public class Buyer : MonoBehaviour
         if (goodorBad < 90)
         {
             isGoodBuyer = true;
-            profitRatio = Random.Range(0.8f, 1.2f);
+            profitRatio = Random.Range(0.8f, 1.3f);
         }
         else
         {
             isGoodBuyer = false;
-            profitRatio = Random.Range(0.1f, 0.7f);
+            profitRatio = Random.Range(0.5f, 0.7f);
+            
         }
+        System.Math.Round(profitRatio,3);
+    }
+
+    public void Bargain(int suggested)
+    {
+        float valuedif = suggested/selectedItem.value;
+        float add = 0;
+        if (isGoodBuyer == false)
+        {
+            BadBargain(suggest);
+        }
+        if (firstpatienceLevel <= 4 && isGoodBuyer == true)
+        {
+            if (profitRatio < 1.1);
+            {
+                if (valuedif >= 0.2 && valuedif < 0.6)
+                {
+                    add = Random.Range(-0.1, 0.1);
+                }
+                if (valuedif < 0.7)
+                {
+                    add = Random.Range(-0.05, 0.15);
+                }
+                else if (0.7 <= valuedif && valuedif <= 1)
+                {
+
+                }
+             float add = Random.Range(0.1f, 0.2f);
+            }
+        }
+        else if (firstpatienceLevel > 4 && isGoodBuyer == true)
+        {
+
+        }
+    }
+
+    public void BadBargain(int suggest)
+    {
+
     }
 }
 
