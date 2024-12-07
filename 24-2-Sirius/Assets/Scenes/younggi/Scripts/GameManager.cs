@@ -274,7 +274,7 @@ public class GameManager : MonoBehaviour
                 Debug.Log("더이상 흥정을 받아들이지 않겠네");
                 Invoke("CallNextBuyer", 1.5f);
             }
-            else if (suggestedMoney <= buyerComponent.selectedItem.value * 0.2)
+            else if (suggestedMoney >= buyerComponent.selectedItem.value * 2.5)
             {
                 Debug.Log("이런 말도 안되는 가격을 제시하다니");
                 Invoke("CallNextBuyer", 1.5f);
