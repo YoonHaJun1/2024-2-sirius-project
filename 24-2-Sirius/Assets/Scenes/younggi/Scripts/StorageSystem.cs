@@ -61,10 +61,55 @@ public class StorageSystem
         if (slotToRemove != null)
         {
             slotToRemove.ClearSlot(); // Clear the slot
+            RearrangeStorage();
             //Debug.Log("Item removed");
             return true;
         }
         //Debug.Log("Item to remove not found");
         return false; // Item not found in storage
+    }
+
+    private void RearrangeStorage()
+    {
+        int slotcount = 0;
+        int lastIndex = 0;
+        for (int i = 0; i < StorageSlots.Count; i++)
+        {
+            var check = StorageSlots[i];
+            if (check.ItemData != null)
+            {
+                slotcount++;
+                lastIndex = i;
+            }
+        }
+
+        for (int i = 0; i < StorageSlots.Count; i++)
+        {
+            var check = StorageSlots[i];
+            if (check.ItemData == null && i != lastIndex)
+            {
+                storageSlots[i].UpdateStorageSlot(storageSlots[lastIndex].ItemData);
+                storageSlots[lastIndex].ClearSlot(); 
+                break;
+            }
+        }
+
+    //     for (int i = 0; i < )
+
+    //     for (int i = 0; i < storageSlots.Count - 1; i++)
+    //     {
+    //         if (storageSlots[i].ItemData == null) // Find the first empty slot
+    //         {
+    //             int lastIndex = storageSlots.Count - 1;
+
+    //             // Move the last item's data to the empty slot
+    //             if (storageSlots[lastIndex].ItemData != null)
+    //             {
+    //                 storageSlots[i].UpdateStorageSlot(storageSlots[lastIndex].ItemData);
+    //                 storageSlots[lastIndex].ClearSlot(); 
+    //             }
+    //         }
+    //     }
+    // }
     }
 }
