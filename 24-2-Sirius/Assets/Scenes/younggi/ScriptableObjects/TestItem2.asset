@@ -12,8 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21012079a66874d40816be2084a1938f, type: 3}
   m_Name: TestItem2
   m_EditorClassIdentifier: 
-  id: 0
+  type: 0
   itemName: Test Item 2
   description: This is a Test Item 2
-  Icon: {fileID: 0}
-  maxStackSize: 1
+  itemImage: {fileID: 430236459, guid: be055103dd00040a7a964421768c590f, type: 3}
+  curseType: 0
+  blessType: 0
+  value: 0
+  blessMaxLimit: 0

@@ -26,6 +26,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] Text statusText;
     [SerializeField] GameObject _customerPrefab;
     [SerializeField] GameObject _buyerPrefab;
+    [SerializeField] GameObject _customerPrefab2;
+    [SerializeField] GameObject _buyerPrefab2;
     [SerializeField] GameObject cutomerSpwaner;
     [SerializeField] GameObject player;
     [SerializeField] GameObject itemButton;
@@ -146,7 +148,10 @@ public class GameManager : MonoBehaviour
     {
         isGreetingEnd = false;
 
-        instantiatedCustomerObject = Instantiate(_customerPrefab, cutomerSpwaner.transform.position, Quaternion.identity);
+        int charaType = Random.Range(0, 2);
+        GameObject _customer = charaType == 0 ? _customerPrefab : _customerPrefab2;
+
+        instantiatedCustomerObject = Instantiate(_customer, cutomerSpwaner.transform.position, Quaternion.identity);
 
         Invoke("OnItemButtonActive", 1.8f);
     }
@@ -231,14 +236,14 @@ public class GameManager : MonoBehaviour
         }
 
         Customer customer = instantiatedCustomerObject.GetComponent<Customer>();
-        
-        int low = customer.itemData.value - Random.Range(-5,-10);
+
+        int low = customer.itemData.value - Random.Range(-5, -10);
         if (low < 0)
         {
-            low  = 0;
+            low = 0;
         }
 
-        int high = customer.itemData.value - Random.Range(5,10);
+        int high = customer.itemData.value - Random.Range(5, 10);
         statusText.text = $"{low} ~ {high}";
 
         if (suggestedMoney >= customer.itemData.value - customer.difficultyLevel) //만약 받아주면
@@ -292,7 +297,7 @@ public class GameManager : MonoBehaviour
         else
         {
             talkManager.GetTalk(0, 0, 3, out name, out talk2);
-            
+
             onTalk(2.5f, talk2);
             Debug.Log("제대로 제시해!!");
             return;
@@ -415,7 +420,9 @@ public class GameManager : MonoBehaviour
 
     private void CreateBuyerObject()
     {
-        instantiatedBuyerObject = Instantiate(_buyerPrefab, cutomerSpwaner.transform.position, Quaternion.identity);
+        int charaType = Random.Range(0, 2);
+        GameObject _buyer = charaType == 0 ? _buyerPrefab : _buyerPrefab2;
+        instantiatedBuyerObject = Instantiate(_buyer, cutomerSpwaner.transform.position, Quaternion.identity);
 
         Buyer buyer = instantiatedBuyerObject.GetComponent<Buyer>();
 
