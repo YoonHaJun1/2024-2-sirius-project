@@ -30,6 +30,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject player;
     [SerializeField] GameObject itemButton;
 
+    [SerializeField] Sprite pendant1;
+    [SerializeField] Sprite pendant2;
+    [SerializeField] Sprite pendant3;
+
 
     private int round = 0;
     private int money = 10000;
@@ -150,6 +154,26 @@ public class GameManager : MonoBehaviour
     private void OnItemButtonActive()
     {
         itemButton.SetActive(true);
+        Image itemButtonImage = itemButton.GetComponent<Image>();
+
+        int itemNum = Random.Range(0, 3);
+
+
+        Debug.Log("itme num: " + itemNum);
+        if (itemNum == 0)
+        {
+            itemButtonImage.sprite = pendant1;
+        }
+        else if (itemNum == 1)
+        {
+            itemButtonImage.sprite = pendant2;
+        }
+        else
+        {
+            itemButtonImage.sprite = pendant3;
+        }
+
+
 
         OnGreetingTalk();
     }
@@ -244,7 +268,7 @@ public class GameManager : MonoBehaviour
                 talkManager.GetTalk(0, 0, 2, out name, out talk);
                 customer.patienceLevel -= 1;
                 onTalk(2.5f, talk); //가격 맘에 안듦
-            }   
+            }
         }
     }
 
@@ -255,7 +279,7 @@ public class GameManager : MonoBehaviour
         Buyer buyerComponent = instantiatedBuyerObject.GetComponent<Buyer>();
         string name;
         string talk;
-        
+
         if (!string.IsNullOrWhiteSpace(input))
         {
             int.TryParse(input, out suggestedMoney); //string -> suggestedMoney int 값으로 변환
@@ -294,7 +318,7 @@ public class GameManager : MonoBehaviour
                 buyerComponent.Bargain(suggestedMoney);
                 buyerComponent.patienceLevel -= 1;
                 onTalk(2.5f, talk); //가격 맘에 안듦
-            }   
+            }
         }
     }
 
@@ -384,13 +408,16 @@ public class GameManager : MonoBehaviour
     private void CreateBuyerObject()
     {
         instantiatedBuyerObject = Instantiate(_buyerPrefab, cutomerSpwaner.transform.position, Quaternion.identity);
-        
+
         Buyer buyer = instantiatedBuyerObject.GetComponent<Buyer>();
-    
-        if(buyer.selectedItem == null){
+
+        if (buyer.selectedItem == null)
+        {
             Debug.Log("살게 없네");
             Invoke("CallNextBuyer", 1.5f);
-        }else{
+        }
+        else
+        {
             Invoke("OnItemButtonActive", 1.8f);
         }
     }
@@ -412,7 +439,8 @@ public class GameManager : MonoBehaviour
 
         stateTextObject.text = "결산";
 
-        if(round == 4){
+        if (round == 4)
+        {
             Debug.Log("돈 내");
         }
     }
