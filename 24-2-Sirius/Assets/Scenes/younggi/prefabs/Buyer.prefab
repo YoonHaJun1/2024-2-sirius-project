@@ -75,7 +75,7 @@ SpriteRenderer:
   m_SortingLayerID: -407921961
   m_SortingLayer: 2
   m_SortingOrder: 5
-  m_Sprite: {fileID: 21300000, guid: 51db3bc09c678b84db281b2fead46ab7, type: 3}
+  m_Sprite: {fileID: -767382927, guid: c120f696451994920bf9952ed50f1f58, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -100,7 +100,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   priceLevel: 0
   isGoodBuyer: 0
-  buyerMoney: 100
   patienceLevel: 0
   profitRatio: 0
   selectedItem: {fileID: 0}

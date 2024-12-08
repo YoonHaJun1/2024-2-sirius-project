@@ -2069,7 +2069,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.511487, g: 0.9150943, b: 0.4704966, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2293,12 +2293,14 @@ MonoBehaviour:
   statusText: {fileID: 0}
   _customerPrefab: {fileID: 5231179083975162334, guid: 78770d8902362624ab0d79d59fdf91c1, type: 3}
   _buyerPrefab: {fileID: 688995422175551803, guid: 6e7f466babba2c1418304d3c8f5a8b18, type: 3}
+  _customerPrefab2: {fileID: 5231179083975162334, guid: fab986d065a844e2497149f8d4663247, type: 3}
+  _buyerPrefab2: {fileID: 688995422175551803, guid: a3c30c44cdbcf4d53aee0e57378af4e2, type: 3}
   cutomerSpwaner: {fileID: 1787504726}
   player: {fileID: 29379929}
   itemButton: {fileID: 767369594}
-  pendant1: {fileID: 0}
-  pendant2: {fileID: 0}
-  pendant3: {fileID: 0}
+  pendant1: {fileID: 1318629930, guid: be055103dd00040a7a964421768c590f, type: 3}
+  pendant2: {fileID: 430236459, guid: be055103dd00040a7a964421768c590f, type: 3}
+  pendant3: {fileID: 616796455, guid: be055103dd00040a7a964421768c590f, type: 3}
 --- !u!4 &877266806
 Transform:
   m_ObjectHideFlags: 0
@@ -3604,7 +3606,7 @@ GameObject:
   - component: {fileID: 1374993331}
   - component: {fileID: 1374993330}
   m_Layer: 5
-  m_Name: Text (Legacy) (1)
+  m_Name: Value Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
