@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] GameObject tradeObject;
     [SerializeField] InputField inputField;
-    [SerializeField] Text statusText;
+    [SerializeField] UnityEngine.UI.Text statusText;
     [SerializeField] GameObject _customerPrefab;
     [SerializeField] GameObject _buyerPrefab;
     [SerializeField] GameObject cutomerSpwaner;
