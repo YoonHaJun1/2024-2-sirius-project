@@ -2204,7 +2204,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.511487, g: 0.9150943, b: 0.4704966, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2433,9 +2433,9 @@ MonoBehaviour:
   cutomerSpwaner: {fileID: 1787504726}
   player: {fileID: 29379929}
   itemButton: {fileID: 767369594}
-  pendant1: {fileID: 0}
-  pendant2: {fileID: 0}
-  pendant3: {fileID: 0}
+  pendant1: {fileID: 1318629930, guid: be055103dd00040a7a964421768c590f, type: 3}
+  pendant2: {fileID: 430236459, guid: be055103dd00040a7a964421768c590f, type: 3}
+  pendant3: {fileID: 616796455, guid: be055103dd00040a7a964421768c590f, type: 3}
 --- !u!4 &877266806
 Transform:
   m_ObjectHideFlags: 0
