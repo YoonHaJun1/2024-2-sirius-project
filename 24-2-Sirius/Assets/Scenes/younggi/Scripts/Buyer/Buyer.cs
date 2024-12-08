@@ -138,7 +138,7 @@ public class Buyer : MonoBehaviour
                 }
                 else if(1 < valuedif && valuedif <= 1.7)
                 {
-                    profitRatio = Random.Range((float)profitRatio - 0.1f, (float)valuedif);
+                    profitRatio = Random.Range((float)profitRatio - 0.05f, (float)valuedif);
                     profitRatio = System.Math.Truncate(profitRatio*1000)/1000;
                 }
                 else
@@ -186,12 +186,12 @@ public class Buyer : MonoBehaviour
                 }
                 else if (0.7 <= valuedif && valuedif <= 1)
                 {
-                    profitRatio = Random.Range((float)profitRatio -0.2f, (float)valuedif);
+                    profitRatio = Random.Range((float)profitRatio -0.1f, (float)valuedif);
                     profitRatio = System.Math.Truncate(profitRatio*1000)/1000;
                 }
                 else if(1 < valuedif && valuedif <= 1.4)
                 {
-                    profitRatio = Random.Range((float)profitRatio - 0.1f, (float)valuedif);
+                    profitRatio = Random.Range((float)profitRatio - 0.05f, (float)valuedif);
                     profitRatio = System.Math.Truncate(profitRatio*1000)/1000;
                 }
                 else
