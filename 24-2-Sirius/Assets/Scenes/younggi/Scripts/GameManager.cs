@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] GameObject tradeObject;
     [SerializeField] InputField inputField;
-
+    [SerializeField] Text statusText;
     [SerializeField] GameObject _customerPrefab;
     [SerializeField] GameObject _buyerPrefab;
     [SerializeField] GameObject cutomerSpwaner;
@@ -205,6 +205,15 @@ public class GameManager : MonoBehaviour
         }
 
         Customer customer = instantiatedCustomerObject.GetComponent<Customer>();
+        
+        int low = customer.itemData.value - Random.Range(-5,-10);
+        if (low < 0)
+        {
+            low  = 0;
+        }
+
+        int high = customer.itemData.value - Random.Range(5,10);
+        statusText.text = $"{low} ~ {high}";
 
         if (suggestedMoney >= customer.itemData.value - customer.difficultyLevel) //만약 받아주면
         {
