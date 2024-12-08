@@ -384,7 +384,6 @@ public class GameManager : MonoBehaviour
         }else{
             Invoke("OnItemButtonActive", 1.8f);
         }
-        
     }
 
     private void startSellItem()

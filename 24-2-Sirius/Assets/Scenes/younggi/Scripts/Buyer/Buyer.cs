@@ -13,11 +13,12 @@ public class Buyer : MonoBehaviour
     private StorageSystem storageSystem; // Reference to the StorageSystem
     private GameObject player;
     public StorageItemData selectedItem;
-    
+    private double biggestcall;  
     private void Awake()
     {
         //buyerMoney = 100; //Buyer 현재 돈
         patienceLevel = Random.Range(3, 8);
+        Debug.Log("patiencelevel : " + patienceLevel);
         firstpatienceLevel = patienceLevel;
         priceLevel = Random.Range(0, 6);
         GoodorBadDecide();
@@ -59,8 +60,6 @@ public class Buyer : MonoBehaviour
             }
         }
 
-        Debug.Log(randomcount);
-        Debug.Log(storageSystem.StorageSlots.Count);
         int randomIndex = Random.Range(0, randomcount);
         var slot = storageSystem.StorageSlots[randomIndex];
         selectedItem = slot.ItemData;
@@ -72,8 +71,7 @@ public class Buyer : MonoBehaviour
     {
         int goodorBad = Random.Range(1, 100);
 
-        Debug.Log("goodorBad amount: " + goodorBad);
-        if (goodorBad < 90)
+        if (goodorBad < 80)
         {
             isGoodBuyer = true;
             profitRatio = Random.Range(0.8f, 1.3f);
@@ -84,12 +82,13 @@ public class Buyer : MonoBehaviour
             profitRatio = Random.Range(0.5f, 0.7f);
             
         }
-        System.Math.Round(profitRatio,3);
+        profitRatio = System.Math.Truncate(profitRatio*1000)/1000;
     }
 
     public void Bargain(int suggested)
     {
-        double valuedif = suggested/selectedItem.value;
+        double valuedif = (double)suggested/(double)selectedItem.value;
+        Debug.Log("Valuedif: "+ valuedif);
         double add = 0.0f;
         if (isGoodBuyer == false)
         {
@@ -97,7 +96,7 @@ public class Buyer : MonoBehaviour
         }
         if (firstpatienceLevel <= 4 && isGoodBuyer == true)
         {
-            if (profitRatio < 1.1)
+            if (profitRatio <= 1)
             {
                 if (valuedif >= 0.2 && valuedif < 0.6)
                 {
@@ -109,18 +108,20 @@ public class Buyer : MonoBehaviour
                 }
                 else if (0.7 <= valuedif && valuedif <= 1)
                 {
-                    add = Random.Range(-0.05f, 0.4f);
+                    profitRatio = Random.Range((float)profitRatio -0.05f, (float)valuedif);
+                    profitRatio = System.Math.Truncate(profitRatio*1000)/1000;
                 }
-                else if(1 < valuedif && valuedif <= 1.35)
+                else if(1 < valuedif && valuedif <= 1.7)
                 {
-                    add = Random.Range(-0.1f, 0.2f);
+                    profitRatio = Random.Range((float)profitRatio, (float)valuedif);
+                    profitRatio = System.Math.Truncate(profitRatio*1000)/1000;
                 }
                 else
                 {
                     add = Random.Range(-0.1f, -0.15f);
                 }
             }
-            else if (profitRatio >= 1.1)
+            else if (profitRatio > 1)
             {
                 if (valuedif >= 0.2 && valuedif < 0.6)
                 {
@@ -132,11 +133,13 @@ public class Buyer : MonoBehaviour
                 }
                 else if (0.7 <= valuedif && valuedif <= 1)
                 {
-                    add = Random.Range(-0.05f, 0.2f);
+                    profitRatio = Random.Range((float)profitRatio -0.05f, (float)valuedif);
+                    profitRatio = System.Math.Truncate(profitRatio*1000)/1000;
                 }
-                else if(1 < valuedif && valuedif <= 1.35)
+                else if(1 < valuedif && valuedif <= 1.7)
                 {
-                    add = Random.Range(0.02f, 0.06f);
+                    profitRatio = Random.Range((float)profitRatio - 0.1f, (float)valuedif);
+                    profitRatio = System.Math.Truncate(profitRatio*1000)/1000;
                 }
                 else
                 {
@@ -158,11 +161,13 @@ public class Buyer : MonoBehaviour
                 }
                 else if (0.7 <= valuedif && valuedif <= 1)
                 {
-                    add = Random.Range(-0.05f, 0.3f);
+                    profitRatio = Random.Range((float)profitRatio -0.05f, (float)valuedif);
+                    profitRatio = System.Math.Truncate(profitRatio*1000)/1000;
                 }
-                else if(1 < valuedif && valuedif <= 1.35)
+                else if(1 < valuedif && valuedif <= 1.4)
                 {
-                    add = Random.Range(-0.1f, 0.1f);
+                    profitRatio = Random.Range((float)profitRatio, (float)valuedif);
+                    profitRatio = System.Math.Truncate(profitRatio*1000)/1000;
                 }
                 else
                 {
@@ -181,11 +186,13 @@ public class Buyer : MonoBehaviour
                 }
                 else if (0.7 <= valuedif && valuedif <= 1)
                 {
-                    add = Random.Range(-0.05f, 0.05f);
+                    profitRatio = Random.Range((float)profitRatio -0.2f, (float)valuedif);
+                    profitRatio = System.Math.Truncate(profitRatio*1000)/1000;
                 }
-                else if(1 < valuedif && valuedif <= 1.35)
+                else if(1 < valuedif && valuedif <= 1.4)
                 {
-                    add = Random.Range(0.01f, 0.05f);
+                    profitRatio = Random.Range((float)profitRatio - 0.1f, (float)valuedif);
+                    profitRatio = System.Math.Truncate(profitRatio*1000)/1000;
                 }
                 else
                 {
@@ -194,7 +201,7 @@ public class Buyer : MonoBehaviour
             }
         }
         
-        System.Math.Round(add,3);
+        add = System.Math.Truncate(add*1000)/1000;
         Debug.Log("add amount: " + add);
         profitRatio += add;
         Debug.Log($"{(selectedItem.value*profitRatio)}원에 살게요");
@@ -204,9 +211,14 @@ public class Buyer : MonoBehaviour
     {
         double valuedif = suggest/selectedItem.value;
         double add = 0;
-        if (valuedif > 0.7)
+        if (valuedif < 1)
         {
-
+            profitRatio = Random.Range((float)profitRatio - 0.1f, (float)valuedif);
+            profitRatio = System.Math.Truncate(profitRatio*1000)/1000;
+        }
+        else if (valuedif >= 1)
+        {
+            profitRatio = Random.Range((float)profitRatio, 0.9f);
         }
     }
 }
