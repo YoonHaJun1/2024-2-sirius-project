@@ -2428,6 +2428,8 @@ MonoBehaviour:
   statusText: {fileID: 0}
   _customerPrefab: {fileID: 5231179083975162334, guid: 78770d8902362624ab0d79d59fdf91c1, type: 3}
   _buyerPrefab: {fileID: 688995422175551803, guid: 6e7f466babba2c1418304d3c8f5a8b18, type: 3}
+  _customerPrefab2: {fileID: 5231179083975162334, guid: fab986d065a844e2497149f8d4663247, type: 3}
+  _buyerPrefab2: {fileID: 688995422175551803, guid: a3c30c44cdbcf4d53aee0e57378af4e2, type: 3}
   cutomerSpwaner: {fileID: 1787504726}
   player: {fileID: 29379929}
   itemButton: {fileID: 767369594}
