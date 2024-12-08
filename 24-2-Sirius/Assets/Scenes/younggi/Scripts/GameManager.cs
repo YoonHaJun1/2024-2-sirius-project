@@ -225,8 +225,8 @@ public class GameManager : MonoBehaviour
 
         if (!player.GetComponent<StorageHolder>().getStorageSystem().HasSlot())
         {
-            string talk = "물건 둘 자리가 없어 보이는데";
-            onTalk(2.5f, talk);
+            string talk2 = "물건 둘 자리가 없어 보이는데";
+            onTalk(2.5f, talk2);
             return;
         }
 
@@ -283,6 +283,7 @@ public class GameManager : MonoBehaviour
         Buyer buyerComponent = instantiatedBuyerObject.GetComponent<Buyer>();
         string name;
         string talk;
+        string talk2;
 
         if (!string.IsNullOrWhiteSpace(input))
         {
@@ -290,8 +291,9 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            talkManager.GetTalk(0, 0, 3, out name, out talk);
-            onTalk(2.5f, talk);
+            talkManager.GetTalk(0, 0, 3, out name, out talk2);
+            
+            onTalk(2.5f, talk2);
             Debug.Log("제대로 제시해!!");
             return;
         }
