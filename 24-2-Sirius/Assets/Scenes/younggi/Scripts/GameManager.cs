@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] GameObject tradeObject;
     [SerializeField] InputField inputField;
-    [SerializeField] UnityEngine.UI.Text statusText;
+    [SerializeField] TextMeshProUGUI statusText;
     [SerializeField] GameObject _customerPrefab;
     [SerializeField] GameObject _buyerPrefab;
     [SerializeField] GameObject _customerPrefab2;
@@ -147,11 +147,14 @@ public class GameManager : MonoBehaviour
     private void CreateCutomerObject()
     {
         isGreetingEnd = false;
+        
 
         int charaType = Random.Range(0, 2);
         GameObject _customer = charaType == 0 ? _customerPrefab : _customerPrefab2;
 
         instantiatedCustomerObject = Instantiate(_customer, cutomerSpwaner.transform.position, Quaternion.identity);
+
+        ShowPrice(); 
 
         Invoke("OnItemButtonActive", 1.8f);
     }
@@ -208,6 +211,19 @@ public class GameManager : MonoBehaviour
         }
 
     }
+    private void ShowPrice()
+    {
+        Customer customer = instantiatedCustomerObject.GetComponent<Customer>();
+
+        int low = customer.itemData.value + Random.Range(-5, -10);
+        if (low < 0)
+        {
+            low = 0;
+        }
+
+        int high = customer.itemData.value + Random.Range(5, 10);
+        statusText.text = $"{low} ~ {high}";
+    }
 
     private void SuggestBuy()
     {
@@ -237,14 +253,14 @@ public class GameManager : MonoBehaviour
 
         Customer customer = instantiatedCustomerObject.GetComponent<Customer>();
 
-        int low = customer.itemData.value - Random.Range(-5, -10);
-        if (low < 0)
-        {
-            low = 0;
-        }
+        // int low = customer.itemData.value - Random.Range(-5, -10);
+        // if (low < 0)
+        // {
+        //     low = 0;
+        // }
 
-        int high = customer.itemData.value - Random.Range(5, 10);
-        statusText.text = $"{low} ~ {high}";
+        // int high = customer.itemData.value - Random.Range(5, 10);
+        // statusText.text = $"{low} ~ {high}";
 
         if (suggestedMoney >= customer.itemData.value - customer.difficultyLevel) //만약 받아주면
         {
