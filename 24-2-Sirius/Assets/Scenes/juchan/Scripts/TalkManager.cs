@@ -21,6 +21,7 @@ public class TalkManager : MonoBehaviour
     JArray rerequestArray;
     JArray angryArray;
     JArray overrequestArray;
+    JArray noitemArray;
 
     public Sprite[] portraitArr;
 
@@ -46,6 +47,7 @@ public class TalkManager : MonoBehaviour
         rerequestArray = (JArray)jObject["rerequest"];
         angryArray = (JArray)jObject["angry"];
         overrequestArray = (JArray)jObject["overrequest"];
+        noitemArray = (JArray)jObject["noitem"];
 
         currentGreetingIndex = 0;
     }
@@ -93,6 +95,10 @@ public class TalkManager : MonoBehaviour
         else if (talkType == 5)
         {
             array = overrequestArray;
+        }
+        else if (talkType == 6)
+        {
+            array = noitemArray;
         }
         else
         {
