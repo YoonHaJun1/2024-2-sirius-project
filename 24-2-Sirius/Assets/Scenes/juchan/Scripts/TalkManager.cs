@@ -18,6 +18,10 @@ public class TalkManager : MonoBehaviour
     JArray tradeArray;
     JArray bargainArray;
     JArray conversation;
+    JArray rerequestArray;
+    JArray angryArray;
+    JArray overrequestArray;
+    JArray noitemArray;
 
     public Sprite[] portraitArr;
 
@@ -40,6 +44,10 @@ public class TalkManager : MonoBehaviour
         refuseArray = (JArray)jObject["refuse"];
         tradeArray = (JArray)jObject["trade"];
         bargainArray = (JArray)jObject["bargain"];
+        rerequestArray = (JArray)jObject["rerequest"];
+        angryArray = (JArray)jObject["angry"];
+        overrequestArray = (JArray)jObject["overrequest"];
+        noitemArray = (JArray)jObject["noitem"];
 
         currentGreetingIndex = 0;
     }
@@ -57,7 +65,7 @@ public class TalkManager : MonoBehaviour
         currentGreetingIndex = 0;
     }
 
-    public bool GetTalk(int scenid, int talkIndex, int talkType, out string name, out string comment)//type 0:refuse, 1:trade, 2:bargain
+    public bool GetTalk(int scenid, int talkIndex, int talkType, out string name, out string comment)//type 0:refuse, 1:trade, 2:bargain, 3:rerequest, 4:angry
     {
         name = "???";
         comment = "...";
@@ -75,6 +83,22 @@ public class TalkManager : MonoBehaviour
         else if (talkType == 2)
         {
             array = bargainArray;
+        }
+        else if (talkType == 3)
+        {
+            array = rerequestArray;
+        }
+        else if (talkType == 4)
+        {
+            array = angryArray;
+        }
+        else if (talkType == 5)
+        {
+            array = overrequestArray;
+        }
+        else if (talkType == 6)
+        {
+            array = noitemArray;
         }
         else
         {

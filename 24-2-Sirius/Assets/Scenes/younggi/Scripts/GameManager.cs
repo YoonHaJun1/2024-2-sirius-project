@@ -218,13 +218,15 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("제대로 제시해!!");
+            talkManager.GetTalk(0, 0, 3, out name, out talk);
+            onTalk(2.5f, talk);
             return;
         }
 
         if (!player.GetComponent<StorageHolder>().getStorageSystem().HasSlot())
         {
-            Debug.Log("자리가 없어!!!");
+            string talk2 = "물건 둘 자리가 없어 보이는데";
+            onTalk(2.5f, talk2);
             return;
         }
 
@@ -254,13 +256,15 @@ public class GameManager : MonoBehaviour
         {
             if (customer.patienceLevel == 0)
             {
-                Debug.Log("더이상 흥정을 받아들이지 않겠네");
+                talkManager.GetTalk(0, 0, 5, out name, out talk);
+                onTalk(2.5f, talk);
                 Invoke("CallNextSeller", 1.5f);
 
             }
             else if (suggestedMoney <= customer.itemData.value * 0.2)
             {
-                Debug.Log("이런 말도 안되는 가격을 제시하다니");
+                talkManager.GetTalk(0, 0, 4, out name, out talk);
+                onTalk(2.5f, talk);
                 Invoke("CallNextSeller", 1.5f);
             }
             else
@@ -279,6 +283,7 @@ public class GameManager : MonoBehaviour
         Buyer buyerComponent = instantiatedBuyerObject.GetComponent<Buyer>();
         string name;
         string talk;
+        string talk2;
 
         if (!string.IsNullOrWhiteSpace(input))
         {
@@ -286,7 +291,10 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("제대로 제시해!!");
+            talkManager.GetTalk(0, 0, 3, out name, out talk2);
+            
+            onTalk(2.5f, talk2);
+            Debug.Log("제시할 수 없는 가격");
             return;
         }
 
@@ -304,12 +312,16 @@ public class GameManager : MonoBehaviour
         {
             if (buyerComponent.patienceLevel == 0)
             {
-                Debug.Log("더이상 흥정을 받아들이지 않겠네");
+                talkManager.GetTalk(0, 0, 5, out name, out talk);
+                onTalk(2.5f, talk);
+                Debug.Log("너무 많은 흥정");
                 Invoke("CallNextBuyer", 1.5f);
             }
             else if (suggestedMoney >= buyerComponent.selectedItem.value * 2.5)
             {
-                Debug.Log("이런 말도 안되는 가격을 제시하다니");
+                talkManager.GetTalk(0, 0, 4, out name, out talk);
+                onTalk(2.5f, talk);
+                Debug.Log("너무 낮은 가격 제시");
                 Invoke("CallNextBuyer", 1.5f);
             }
             else
@@ -410,10 +422,14 @@ public class GameManager : MonoBehaviour
         instantiatedBuyerObject = Instantiate(_buyerPrefab, cutomerSpwaner.transform.position, Quaternion.identity);
 
         Buyer buyer = instantiatedBuyerObject.GetComponent<Buyer>();
+        string talk;
+        string name;
 
         if (buyer.selectedItem == null)
         {
-            Debug.Log("살게 없네");
+            talkManager.GetTalk(0, 0, 6, out name, out talk);
+            onTalk(2.5f, talk);
+            Debug.Log("인벤토리에 아이템이 없습니다.");
             Invoke("CallNextBuyer", 1.5f);
         }
         else
